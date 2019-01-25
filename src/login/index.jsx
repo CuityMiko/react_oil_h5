@@ -23,11 +23,17 @@ class Login extends React.Component {
     }
 
     componentWillMount() {
-        const {params} = this.props;
-        const _result = getWXCode('wxcode');
+        const {params, query} = this.props;
+        let _result = getWXCode('wxcode');
         if (_result == 0) {
-            // 进入入口请求
-            this.bindEntry();
+            if (query.code) {
+                _result = query.code;
+                // 尝试登录
+                this.tryLogin(_result, params.merchantid);
+            } else {
+                // 进入入口请求
+                this.bindEntry();
+            }
         } else if (_result == 1) { // 拒绝授权微信信息
             this.setState({entryRequest: false});
             alert('温馨提示', '该应用需要授权用户信息，是否授权微信信息？', [
@@ -41,8 +47,16 @@ class Login extends React.Component {
                 { text: '确定', onPress: () => this.bindEntry() },
             ])
         } else {
-            // 尝试登录
-            this.tryLogin(_result, params.merchantid);
+            if (_result != 2) {
+                // 尝试登录
+                this.tryLogin(_result, params.merchantid);
+            } else {
+                if (query.code) {
+                    _result = query.code;
+                    // 尝试登录
+                    this.tryLogin(_result, params.merchantid);
+                }
+            }
         }
     }
 

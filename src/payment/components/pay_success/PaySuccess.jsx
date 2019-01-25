@@ -106,7 +106,7 @@ class PaySuccess extends Component {
                 <div className="gift-coupon">
                     <div className="gift-coupon-title">恭喜！老板送您1张优惠券</div>
                     <CouponComponent useScene="gift-coupon" couponItem={couponItem}>
-                        <MobileButton text="去看看" buttonClass="shortButton" customClass="gift-coupon-button" handleClick={() => {this.props.history.push(`/app/coupon/detail/${couponItem.cnum}`)}} />
+                        <MobileButton text="去看看" buttonClass="shortButton" customClass="gift-coupon-button" handleClick={() => {this.props.history.push(`/app/coupon/detail/${couponItem.cnum}?flag=paySuccess`)}} />
                     </CouponComponent>
                 </div>
             )

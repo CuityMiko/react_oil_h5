@@ -140,7 +140,7 @@ class CToB extends Component {
      * 判断是否是会员
      */
     judgeIsMember = (merchantid) => {
-        const {MemberInfo} = this.props;
+        const {MemberInfo, query} = this.props;
         let code = '';
         let merchantId = merchantid;
         if (MemberInfo) { // 登录
@@ -149,12 +149,21 @@ class CToB extends Component {
             let result_code = getWXCode('paywxcode');
             if (result_code != 1 && result_code != 0) {
                 sessionStorage.removeItem('paywxcode');
-                code = result_code;
-                merchantId = this.props.query.merchantId;
+                if (result_code != 2) {
+                    code = result_code;
+                    merchantId = query.merchantId;
+                } else {
+                    if (query.code) {
+                        code = query.code;
+                        merchantId = query.merchantId;
+                    }
+                }
             } else {
-                if (this.props.query.code) {
-                    code = this.props.query.code;
-                    merchantId = this.props.query.merchantId;
+                if (result_code == 0) {
+                    if (query.code) {
+                        code = query.code;
+                        merchantId = query.merchantId;
+                    }
                 }
             }
         }
@@ -379,6 +388,7 @@ class CToB extends Component {
     oilProClick = (index, item) => {
         let cards = this.cards.filter(c => c.specId == item.cardSpecId);
         let {couponcode, currentCouponAmount} = this.state;
+        const {MerchantInfo, query} = this.props;
         if (this.props.query.couponnum == undefined) {
             couponcode = '';
             currentCouponAmount = 0;
@@ -396,26 +406,34 @@ class CToB extends Component {
         }, () => {
             // 计算优惠价格
             this.computeAmount();
+            // 获取商户ID
+            let merchantid = query.merchantId ? query.merchantId : MerchantInfo && MerchantInfo.id ? MerchantInfo.id : 0;
+            // 绑定充值规则
+            this.bindRechargeRecommendRule(merchantid, item.cardSpecId)
         })
     };
 
     /**
      * 绑定充值推荐规则
      */
-    bindRechargeRecommendRule = (merchantid) => {
+    bindRechargeRecommendRule = (merchantid, cardSpecId) => {
         const {isMember, cards} = this.state;
         // 获取商户ID
         let merchantId = merchantid;
         // 获取卡种ID 默认汽油
         let _cardSpecId = 1;
-        if (isMember) { // 会员
-            if (cards && cards.length > 0) {
-                if (cards.length == 1) {
-                    _cardSpecId = cards[0].specId;
+        if (cardSpecId) {
+            _cardSpecId = cardSpecId;
+        } else {
+            if (isMember) { // 会员
+                if (cards && cards.length > 0) {
+                    if (cards.length == 1) {
+                        _cardSpecId = cards[0].specId;
+                    }
                 }
+            } else { // 非会员，显示汽油充值规则
+                _cardSpecId = 1;
             }
-        } else { // 非会员，显示汽油充值规则
-            _cardSpecId = 1;
         }
         try {
             StoreService.GetRechargeRuleData(_cardSpecId, merchantId).then(res => {

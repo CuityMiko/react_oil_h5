@@ -52,8 +52,15 @@ class ShareCoupon extends Component {
             merchantId = MerchantInfo.id;
         } else { // 未登录
             let result_code = getWXCode('shareCoupon');
+            sessionStorage.removeItem('shareCoupon');
             if (result_code != 1 && result_code != 0) {
-                code = result_code;
+                if (result_code) {
+                    code = result_code;
+                } else {
+                    if (query.code) {
+                        code = query.code;
+                    }
+                }
                 merchantId = this.props.query.merchantId;
                 GetMerchantInfoAction(merchantId);
             }

@@ -74,13 +74,13 @@ export const getWXCode = (key) => {
                }
                return code;
            } catch (error) {
-               return 0;
+               return 2;
            }
        } else {
            if (_search.indexOf('state') > -1) {
                return 1;
            } else {
-               return 0;
+               return 2;
            }
        }
    }

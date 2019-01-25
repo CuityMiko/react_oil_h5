@@ -50,7 +50,11 @@ class Home extends Component {
                         cardObj: res.cardObj,
                         dataItems: res.dataItems
                     })
-                    this.bindRecommendRule(res.cards);
+                    if (res.cards.length > 1) {
+                        this.getRecommendRuleData(res.cards);
+                    } else {
+                        this.bindRecommendRule(res.cards[0].cardSpecId);
+                    }
                 })
                 .catch((err) => {
                     console.log(err);
@@ -61,37 +65,59 @@ class Home extends Component {
     }
 
     /**
+     * 绑定多充值规则
+     */
+    getRecommendRuleData = (cards) => {
+        try {
+            cards = cards.sort((x, y) => y.cardSpecId - x.cardSpecId);
+            cards.map(c => {
+                if (c.cardSpecId) {
+                    this.bindRecommendRule(c.cardSpecId);
+                }
+            })
+        } catch (error) {
+        }
+    }
+
+    /**
      * 绑定推荐规则
      */
-    bindRecommendRule = (cards) => {
+    bindRecommendRule = (cardSpecId) => {
         try {
             const {MerchantInfo} = this.props;
-            StoreService.GetRechargeRuleData(cards[0].cardSpecId, MerchantInfo.id).then(res => {
+            StoreService.GetRechargeRuleData(cardSpecId, MerchantInfo.id).then(res => {
                 if (res != null && res.length > 0) {
                     let rerules = res.filter(r => r.topRecommended == 1);
-                    if (rerules != null && rerules.length > 0) {
-                        const temp = rerules[0];
-                        let _info = `充值￥${temp.amount}送`;
-                        switch (temp.giftType) {
-                            case 0: // 送金额
-                                _info = _info + `￥${temp.giftContent}`;
-                                break;
-                            case 1: // 送积分
-                                _info = _info + `${temp.giftContent}积分`;
-                                break;
-                            case 2: // 送优惠券
-                                _info = _info + `${(temp.giftContentName || '')}优惠券`;
-                                break;
-                            default:
-                                break;
-                        }
-                        this.setState({recommendRechargeRule: _info});
-                    }
+                    this.bindRecommendRuleInfo(rerules);
                 }
             }).catch(err => {
                 this.setState({recommendRechargeRule: ''});
             })
         } catch (error) {
+        }
+    }
+
+    /**
+     * 绑定推荐信息
+     */
+    bindRecommendRuleInfo = (rerules) => {
+        if (rerules != null && rerules.length > 0) {
+            const temp = rerules[0];
+            let _info = `充值￥${temp.amount}送`;
+            switch (temp.giftType) {
+                case 0: // 送金额
+                    _info = _info + `￥${temp.giftContent}`;
+                    break;
+                case 1: // 送积分
+                    _info = _info + `${temp.giftContent}积分`;
+                    break;
+                case 2: // 送优惠券
+                    _info = _info + `${(temp.giftContentName || '')}优惠券`;
+                    break;
+                default:
+                    break;
+            }
+            this.setState({recommendRechargeRule: _info});
         }
     }
 

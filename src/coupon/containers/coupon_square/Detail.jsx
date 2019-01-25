@@ -174,7 +174,24 @@ class CouponDetail extends Component {
                 default:
                     break;
             }
-        } else {
+        } else if(query.flag && query.flag == 'paySuccess') { // 从CToB支付成功页面赠送卡券过来actTimeStart和actTimeEnd为null
+            if (couponObj.availInventory > 0) {
+                // 库存大于0时显示立即领取
+                return (
+                    <div className="button-box">
+                        <MobileButton text="立即领取" buttonClass="longButton" handleClick={() => {this.goToTake(couponObj.id)}} />
+                    </div>
+                )
+            } else if(couponObj.availInventory <= 0) {
+                // 库存为0时显示已被抢完
+                return (
+                    <div className="button-box">
+                        <MobileButton text="已被抢完" buttonClass="longButton" disabled handleClick={() => {}} />
+                    </div>
+                )
+            }
+        }
+         else {
             // 卡券在未领取时又分为四种情况（已抢完，剩余x天未开始，剩余x小时开始，立即抢），做第二次的判断显示
             return this.secondJudge(couponObj);
         }

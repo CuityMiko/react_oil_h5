@@ -36,16 +36,29 @@ class ShareCoupon extends Component {
 
     // 判断是否是会员
     judgeIsMember = () => {
-        const {GetMerchantInfoAction, history} = this.props;
+        const {GetMerchantInfoAction, history, query} = this.props;
         let {couponNumber, merchantId} = this.state;
         let code = '';
         let _this = this;
         let result_code = getWXCode('shareCoupon');
+        sessionStorage.removeItem('shareCoupon');
         if (result_code != 1 && result_code != 0) {
-            code = result_code;
-            // 缓存商户信息状态
-            GetMerchantInfoAction(merchantId);
+            if (result_code != 2) {
+                code = result_code;
+            } else {
+                if (query.code) {
+                    code = query.code;
+                }
+            }
+        } else {
+            if (result_code == 0) {
+                if (query.code) {
+                    code = query.code;
+                }
+            }
         }
+        // 缓存商户信息状态
+        GetMerchantInfoAction(merchantId);
         BusinessService.JudgeIsMember({
             code,
             merchantId

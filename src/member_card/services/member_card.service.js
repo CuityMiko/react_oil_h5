@@ -8,6 +8,8 @@ const getMemberCardDetail = function (merchantId) {
 
     httpHelper.get(memberCardUrl.getMemberCardDetailUrl + '/' + merchantId)
         .then((res) => {
+            // res.cardPrivilegeExplain = res.cardPrivilegeExplain.replace('\n', '<br/>');
+            // res.cardUseNotice = res.cardUseNotice.replace('\n', '<br/>');
             let _res = new Map().set('特权说明', res.cardPrivilegeExplain)
                 .set('有效日期', '永久有效')
                 .set('商家电话', res.contactNumber)
