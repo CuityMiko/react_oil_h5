@@ -25,7 +25,13 @@ class PageDetail extends Component {
                                 <div className="detail-items" key={index}>
                                     <label className="items-label">{item[0]}</label>
                                     <div className="text">
-                                        {(item[0].indexOf('手机') > -1 || item[0].indexOf('电话') > -1 || item[0].indexOf('tel') > -1) ? (<a className="tel" href={`tel:${item[1]}`}>{item[1]}</a>) : item[1]}
+                                        {
+                                            (item[0].indexOf('手机') > -1 || item[0].indexOf('电话') > -1 || item[0].indexOf('tel') > -1) ? (
+                                                <a className="tel" href={`tel:${item[1]}`}>{item[1]}</a>
+                                            ) : (
+                                                <span dangerouslySetInnerHTML={{__html: item[1]}}></span>
+                                            )
+                                        }
                                     </div>
                                 </div>
                             )
