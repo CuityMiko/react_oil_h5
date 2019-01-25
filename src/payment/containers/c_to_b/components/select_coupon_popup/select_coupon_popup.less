@@ -1,0 +1,87 @@
+@import "../../../../../base/style/variables";
+
+.select-coupon-popup-container {
+  height: 100%;
+  .select-coupon-field {
+    background-color: #ffffff;
+    font-size: 28px;
+    font-weight:400;
+    color: #333333;
+    padding: 20px 26px;
+    .field-name {
+      margin-left: 0;
+    }
+  }
+  .sure-button {
+    width: 90px;
+    height: 47px;
+    border-radius: 4px;
+    box-shadow: none;
+    text-shadow: none;
+    background-color: @primary-color;
+    font-size: 28px;
+  }
+  .not-use-coupon {
+    color: @primary-color;
+    font-size: 26px;
+    font-weight:400;
+    width: 100%;
+    height: 56px;
+    text-align: center;
+    line-height: 56px;
+    background-color: #ffffff;
+  }
+  .coupon-content {
+    text-align: left;
+    height: 550px;
+    overflow: scroll;
+  }
+  // radio样式修改
+  .am-list-item {
+    padding-left: 0;
+    min-height: 40px;
+    .am-list-line {
+      padding-right: 0;
+      .am-list-extra {
+        width: 56px;
+        height: 56px;
+        flex-basis: auto;
+        padding: 0;
+        .am-radio-wrapper {
+          width: 56px;
+          height: 56px;
+          .am-radio {
+            width: 56px;
+            height: 56px;
+            border: 2px solid #dbdbdb;
+            border-radius: 50%;
+            box-sizing: border-box;
+            vertical-align: top;
+            input {
+              width: 56px;
+              height: 56px;
+            }
+            .am-radio-inner {
+              width: 56px;
+              height: 56px;
+            }
+          }
+          .am-radio.am-radio-checked {
+            border: none;
+            .am-radio-inner:after {
+              background-image: url("../../../../assets/images/coupon_selected.png");
+              background-size: 56px 56px;
+              top: 0;
+              right: 0;
+              width: 56px;
+              height: 56px;
+              border: none;
+              -webkit-transform: none;
+              transform: none;
+            }
+          }
+        }
+      }
+    }
+  }
+}

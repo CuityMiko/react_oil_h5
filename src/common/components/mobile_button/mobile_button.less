@@ -1,0 +1,79 @@
+html:not([data-scale]) .am-button::before {
+  border-radius: 0;
+  border: none;
+}
+
+.button-container {
+  button {
+    padding: 0;
+    margin: 0;
+    border: none;
+    background-color: #fff;
+  }
+
+  .button {
+    text-align: center;
+    font-weight: 600;
+    border-radius: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .iconClass {
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .longButton {
+    width: 100%;
+    height: 80px;
+    background: linear-gradient(0deg, @back-start-color 0%, @back-end-color 100%);
+    box-shadow: 0 9px 25px 0 @shadow-color;
+    font-size: 32px;
+    color: rgba(255,253,253,1);
+    line-height: 80px;
+  }
+
+  .emptyButton {
+    width: 100%;
+    height: 80px;
+    line-height: 80px;
+    border: 2px solid @primary-color;
+    font-size: 28px;
+    color: @primary-color;
+  }
+
+  .shortButton {
+    width: 120px;
+    height: 48px;
+    background:linear-gradient(0deg,@back-start-color 0%,@back-end-color 100%);
+    box-shadow: 0 8px 18px 0 @shadow-color;
+    font-size: 24px;
+    color: #FFFFFF;
+    line-height: 48px;
+  }
+
+  .businessButton {
+    width: 168px;
+    height: 48px;
+    background: linear-gradient(0deg,rgba(255,216,208,1) 0%,rgba(255,255,255,1) 100%);
+    box-shadow: 0 6px 12px 0 rgba(252,85,31,0.7);
+    font-size: 28px;
+    font-weight: 500;
+    color: @primary-color;
+    line-height: 48px;
+  }
+
+  .disabled {
+    box-shadow: none;
+    background: #DCDCDC;
+    border: none;
+    pointer-events: none;
+    color: #ffffff;
+  }
+
+  .square {
+    border-radius: 10px;
+  }
+}

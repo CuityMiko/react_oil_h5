@@ -1,0 +1,35 @@
+@import '../../../base/style/variables.less';
+
+.data-item-container {
+  .data-item-box {
+    text-align: center;
+    position: relative;
+    width: 100%;
+    .data-item {
+      .text {
+        font-size: 24px;
+        font-weight: 400;
+        color: #808080;
+      }
+      .data {
+        font-size: 28px;
+        font-weight: 500;
+        color: @primary-color;
+        margin-top: 25px;
+      }
+    }
+    &:after {
+      content: '';
+      width: 1px;
+      height: 69px;
+      background-color: #EAEAEA;
+      display: inline-block;
+      position: absolute;
+      top: 7px;
+      right: 0;
+    }
+    &:last-child:after {
+      display: none;
+    }
+  }
+}

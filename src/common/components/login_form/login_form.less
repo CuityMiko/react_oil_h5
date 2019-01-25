@@ -1,0 +1,79 @@
+@import "../../../base/style/variables";
+
+// 登录表单样式
+.login-form-container {
+  .am-list-body {
+    border: none;
+  }
+  .am-list-body::before, .am-list-body::after {
+    display: none!important;
+  }
+  .am-list-item.am-input-item {
+    padding-left: 0;
+    height: 100px;
+  }
+  .am-list-item .am-input-label {
+    color: #7A7A7A;
+  }
+  .am-list-item .am-list-line {
+    padding-right: 0;
+  }
+  .am-list-item .am-input-control input {
+    &::-webkit-input-placeholder { /* WebKit browsers */
+      color: #DBDBDB;
+    }
+    &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+      color: #DBDBDB;
+    }
+    &::-moz-placeholder { /* Mozilla Firefox 19+ */
+      color: #DBDBDB;
+    }
+    &:-ms-input-placeholder { /* Internet Explorer 10+ */
+      color: #DBDBDB;
+    }
+  }
+}
+
+// 分享卡券时登录表单样式
+.share-form-container {
+  .am-list-body {
+    background-color: transparent;
+  }
+  .am-list-item.am-input-item {
+    padding-right: 30px;
+  }
+  .am-list-item .am-input-label {
+    color: #ffffff;
+  }
+  .am-list-item .am-list-line {
+    padding-left: 25px;
+  }
+  .am-list-item .am-input-control input {
+    color: #ffffff;
+    &::-webkit-input-placeholder { /* WebKit browsers */
+      color: #ffffff;
+      opacity: 0.4;
+    }
+    &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+      color: #ffffff;
+      opacity: 0.4;
+    }
+    &::-moz-placeholder { /* Mozilla Firefox 19+ */
+      color: #ffffff;
+      opacity: 0.4;
+    }
+    &:-ms-input-placeholder { /* Internet Explorer 10+ */
+      color: #ffffff;
+      opacity: 0.4;
+    }
+  }
+  .send-code-btn {
+    background-color: #ffffff;
+    color: @primary-color;
+  }
+  .share-button {
+    background:linear-gradient(0deg,rgba(252,206,204,1) 0%,rgba(255,255,255,1) 100%);
+    box-shadow:0 12px 25px 0 rgba(221,35,35,0.8);
+    color: @primary-color;
+  }
+}

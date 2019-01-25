@@ -1,0 +1,249 @@
+@import "../../../base/style/variables";
+
+// 数字键盘的确定按钮的背景颜色设置
+.am-number-keyboard-wrapper table tr .am-number-keyboard-item.keyboard-confirm {
+  color: #ffffff;
+  background-color: @primary-color!important;
+}
+
+.c-to-b-container {
+  height: 100%;
+  .header {
+    background-color: #ffffff;
+    overflow: hidden;
+    // 油品选择field
+    .select-oil-field {
+      padding: 24px 0;
+      .icon-img {
+        width: 42px;
+        height: 42px;
+      }
+      .right-content {
+        font-size: 28px;
+        font-weight: 400;
+        color: #808080;
+        .right {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          img {
+            width: 48px;
+            height: 42px;
+            margin-left: 18px;
+          }
+        }
+      }
+    }
+    // 油品选择动画
+    .oil-pro-box {
+      margin-left: 26px;
+      display: -webkit-box;
+      overflow-x: scroll;
+      -webkit-overflow-scrolling:touch;
+      &::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        display: none;
+      }
+      .oil-pro {
+        width: 172px!important;
+        height: 72px;
+        border: 3px solid #DBDBDB;
+        border-radius: 10px;
+        margin-right: 26px;
+        font-size: 32px;
+        font-weight: 600;
+        color: #333333;
+        text-align: center;
+        line-height: 66px;
+        box-sizing: border-box;
+      }
+      .oil-pro-checked {
+        height: 80px;
+        line-height: 72px;
+        color: @primary-color;
+        background-color: #FFF0F0;
+        border-color: @primary-color;
+      }
+    }
+    // 油品单价field
+    .oil-price-box {
+      background-color: #F5F5F5;
+      margin: 30px 0 20px;
+      .oil-price-field {
+        font-size: 28px;
+        font-weight: 400;
+        color: #808080;
+        padding: 20px 0;
+        margin: 0 20px;
+        .field-name {
+          margin-left: 0;
+        }
+        .right-content {
+          color: #333333;
+          .oil-price-field-right {
+            display: flex;
+            align-items: center;
+            img {
+              width: 31px;
+              height: 30px;
+              margin-right: 8px;
+            }
+          }
+        }
+      }
+      .discount-price-field {
+        .right-content {
+          color: @primary-color;
+        }
+      }
+    }
+    // antd-mobile中的list组件样式更改,数字键盘
+    .am-list-item {
+      padding-left: 0;
+      img {
+        width: 120px;
+        height: 40px;
+      }
+      .am-list-line {
+        padding-right: 0;
+        .am-input-label {
+          font-size: 60px!important;
+          font-weight: 500;
+          color: #333333;
+        }
+        .am-input-label.am-input-label-5 {
+          width: 60px;
+        }
+        .am-input-control .fake-input-container {
+          .fake-input-placeholder {
+            font-size: 52px;
+          }
+          .fake-input {
+            font-size: 52px;
+            color: #333333;
+            font-weight: 500;
+          }
+        }
+        .am-list-content {
+          color: #333333;
+          font-size: 28px;
+          font-weight: 400;
+        }
+        .am-list-extra {
+          font-size: 28px;
+          font-weight: 500;
+          color: #353535;
+        }
+      }
+    }
+    .am-list-body::before, .am-list-body::after {
+      display: none;
+    }
+    .am-list-body div:not(:last-child) .am-list-line::after {
+      display: none;
+    }
+  }
+  .middle {
+    background-color: #ffffff;
+    // 选择付款方式
+    .select-pay-field {
+      font-size: 28px;
+      font-weight: 400;
+      color: #808080;
+      padding: 25px 0;
+      border-bottom: 1px solid rgba(219,219,219,0.7);
+      .field-name {
+        margin-left: 0;
+      }
+      .right-content {
+        color: @primary-color;
+        font-weight: 500;
+        .select-pay-right {
+          display: flex;
+          align-items: center;
+          img {
+            width: 26px;
+            height: 26px;
+          }
+        }
+      }
+    }
+    // 付款方式
+    .pay-field {
+      font-size: 28px;
+      font-weight: 400;
+      color: #000020;
+      padding-top: 38px;
+      &:last-child {
+        padding-bottom: 38px;
+      }
+      .field-name {
+        margin-left: 0;
+        .subtext {
+          color: #808080;
+        }
+      }
+      .icon-img {
+        width: 36px;
+        height: 36px;
+        margin-right: 19px;
+      }
+      .right-content {
+        display: flex;
+        align-items: center;
+      }
+    }
+    // radio组件样式修改
+    .am-list-item {
+      padding-left: 0;
+      min-height: 40px;
+      .am-list-line {
+        padding-right: 0;
+        .am-list-extra {
+          width: 32px;
+          height: 32px;
+          flex-basis: auto;
+          padding: 0;
+          .am-radio-wrapper {
+            width: 32px;
+            height: 32px;
+            .am-radio {
+              width: 32px;
+              height: 32px;
+              border: 2px solid #dbdbdb;
+              border-radius: 4px;
+              box-sizing: border-box;
+              vertical-align: top;
+              input {
+                width: 32px;
+                height: 32px;
+              }
+              .am-radio-inner {
+                width: 32px;
+                height: 32px;
+              }
+            }
+            .am-radio.am-radio-checked {
+              border: none;
+              .am-radio-inner:after {
+                background-image: url("../../assets/images/payment_selected.png");
+                background-size: 32px 32px;
+                top: 0;
+                right: 0;
+                width: 32px;
+                height: 32px;
+                border: none;
+                -webkit-transform: none;
+                transform: none;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .c-to-b-button {
+    border-radius: 4px;
+  }
+}

@@ -1,0 +1,189 @@
+@import "../../../../base/style/variables";
+
+.coupon-detail-container {
+  background-color: #333333;
+  height: 100%;
+  padding-top: 26px;
+  box-sizing: border-box;
+  .coupon-detail-wrap {
+    background-color: #333333;
+    padding-bottom: 26px;
+    .coupon-detail-box {
+      background-color: #ffffff;
+      border-radius: 10px;
+      position: relative;
+      &:before {
+        content: '';
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background-color: #333333;
+        position: absolute;
+        left: -12px;
+        top: 93px;
+      }
+      &:after {
+        content: '';
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        background-color: #333333;
+        position: absolute;
+        right: -12px;
+        top: 93px;
+      }
+      .coupon-detail-content {
+        border-radius: 10px;
+        .coupon-detail-share-field {
+          font-size: 28px;
+          font-weight: 400;
+          color: #323232;
+          padding: 28px 0;
+          border-bottom: 2px dashed #DBDBDB;
+          .icon-img {
+            width: 48px;
+            height: 48px;
+            border-radius: 4px;
+          }
+          .right-content {
+            .field-right-content {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            .icon {
+              width: 40px;
+              height: 40px;
+              margin-right: 6px;
+            }
+            .share {
+              font-size: 28px;
+              font-weight: 600;
+              color: @primary-color;
+            }
+          }
+        }
+        .share-popup-container {
+          img {
+            width: 100%;
+            height: 362px;
+          }
+        }
+        .middle-content {
+          border-bottom: 2px dashed #DBDBDB;
+          text-align: center;
+          margin: 0 auto;
+          .money {
+            font-size: 60px;
+            font-family: Arial-BoldMT;
+            font-weight: bold;
+            color: @primary-color;
+            margin: 40px 0 35px 0;
+          }
+          .apply-conditions {
+            font-size: 28px;
+            font-weight: 400;
+            color: #808080;
+          }
+          .icon-box {
+            margin-top: 25px;
+            height: 116px;
+            img {
+              width: 228px;
+              height: 116px;
+            }
+          }
+          .button-box {
+            margin: 30px 0 42px 0;
+          }
+          .count-down-box {
+            font-size: 24px;
+            font-weight: 400;
+            color: #333333;
+            margin: 50px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            &:before {
+              content: '';
+              display: inline-block;
+              width: 156px;
+              height: 2px;
+              background: linear-gradient(-90deg,#333333 0%,#DBDBDB 100%);
+              opacity: 0.4;
+              margin-right: 10px;
+            }
+            &:after {
+              content: '';
+              display: inline-block;
+              width: 156px;
+              height: 2px;
+              background: linear-gradient(90deg,#333333 0%,#DBDBDB 100%);
+              opacity: 0.4;
+              margin-left: 10px;
+            }
+          }
+          .day-box {
+            font-size: 24px;
+            font-weight: 400;
+            color: #333333;
+            line-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 50px 0;
+            &:before {
+              content: '';
+              display: inline-block;
+              width: 156px;
+              height: 2px;
+              background: linear-gradient(-90deg,#333333 0%,#DBDBDB 100%);
+              opacity: 0.4;
+              margin-right: 10px;
+            }
+            &:after {
+              content: '';
+              display: inline-block;
+              width: 156px;
+              height: 2px;
+              background: linear-gradient(90deg,#333333 0%,#DBDBDB 100%);
+              opacity: 0.4;
+              margin-left: 10px;
+            }
+            .text {
+              .box {
+                display: inline-block;
+                width: 50px;
+                height: 50px;
+                border-radius: 4px;
+                background-color: #333333;
+                color: #ffffff;
+              }
+              .box-one {
+                margin: 0 15px 0 40px;
+              }
+              .box-two {
+                margin-right: 40px;
+              }
+            }
+          }
+        }
+        .coupon-detail-field {
+          font-size: 28px;
+          font-weight: 500;
+          color: #333333;
+          padding: 24px 0;
+          .icon-img {
+            width: 40px;
+            height: 40px;
+          }
+        }
+        .coupon-detail-station-content {
+          border-radius: 10px;
+        }
+      }
+    }
+  }
+}

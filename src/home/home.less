@@ -1,0 +1,70 @@
+@import './../base/style/variables.less';
+
+.home-container {
+  .am-notice-bar {
+    background-color: #FFEAE5;
+    color: @primary-color;
+    height: 72px;
+    font-size: 28px;
+    font-weight: 400;
+  }
+  .am-notice-bar-icon {
+    margin-left: 0;
+  }
+  .am-notice-bar-icon + div {
+    margin-left: -10px;
+  }
+  .am-icon-md {
+    width: 32px;
+    height: 32px;
+  }
+  .notice-icon {
+    width: 72px;
+    height: 72px;
+    display: inline-block;
+  }
+  .button-box {
+    position: relative;
+    .pop-arrow {
+      position: absolute;
+      top: -4px;
+      right: 270px;
+      display: inline-block;
+      img {
+        width: 34px;
+        height: 15px;
+      }
+    }
+    .pop {
+      position: absolute;
+      height: 44px;
+      background-color: @primary-color;
+      box-shadow: 0 5px 12px 0 rgba(253,137,138,0.4);
+      border-radius: 5px;
+      right: 94px;
+      top: -40px;
+      padding: 0 20px;
+      display: table-cell;
+      vertical-align: middle;
+      line-height: 44px;
+      img {
+        width: 24px;
+        height: 22px;
+        display: inline-block;
+        position: absolute;
+        top: 12px;
+        left: 20px;
+      }
+      .pop-text {
+        height: 22px;
+        font-size: 24px;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: 44px;
+        text-align: center;
+        display: inline-block;
+        margin-left: 30px;
+      }
+    }
+  }
+}

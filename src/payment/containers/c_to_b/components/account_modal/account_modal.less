@@ -1,0 +1,57 @@
+@import "../../../../../base/style/variables";
+
+.am-modal-transparent .am-modal-content .am-modal-body {
+  padding: 0 26px 26px;
+}
+
+.account-modal-container {
+  position: relative;
+  .close-icon {
+    width: 52px;
+    height: 52px;
+    position: absolute;
+    top: -14px;
+    right: -14px;
+  }
+  .header {
+    border-bottom: 2px dashed #CCCCCC;
+    .icon {
+      width: 116px;
+      height: 152px;
+      margin: 0 auto;
+    }
+    .account-title {
+      font-size: 32px;
+      font-weight: 400;
+      color: #333333;
+      text-align: center;
+    }
+  }
+  .content {
+    .field-class {
+      font-size: 28px;
+      font-weight: 400;
+      color: #808080;
+      padding-top: 30px;
+      .field-name {
+        margin-left: 0;
+      }
+      .right-content {
+        font-weight: 500;
+        color: #333333;
+      }
+    }
+    .color {
+      .right-content {
+        color: @primary-color;
+      }
+    }
+  }
+  .footer {
+    .go-recharge-button {
+      box-shadow: none;
+      border-radius: 4px;
+      margin-top: 22px;
+    }
+  }
+}

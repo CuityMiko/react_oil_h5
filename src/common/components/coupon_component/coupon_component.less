@@ -1,0 +1,56 @@
+@import "../../../base/style/variables";
+
+.coupon-component-container {
+  width: 100%;
+  height: 188px;
+  background-image: url("assets/images/coupon_bg.png");
+  background-size: 100% 188px;
+  display: flex;
+  margin-top: 26px;
+  .left-coupon-component-box {
+    width: 71.3%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .right-content {
+    width: 28.7%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+.coupon-component-container-share {
+  background-image: url("assets/images/share_coupon_bg.png");
+  height: 269px;
+  background-size: 100% 269px;
+  .left-coupon-component-box {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .right-content {
+    width: 28.7%;
+    display: none;
+  }
+}
+.coupon-component-container-gift {
+  background-image: url("assets/images/gift_coupon_bg.png");
+  .gift-coupon {
+    .money,.apply-conditions,.name {
+      color: #ffffff!important;
+    }
+    .date,.apply-goods {
+      color: #FFECE5!important;
+    }
+  }
+}
+.coupon-component-container-invalid {
+  background-image: url("assets/images/coupon_invalid_bg.png");
+  .invalid-coupon {
+    .money {
+      color: #808080!important;
+    }
+  }
+}

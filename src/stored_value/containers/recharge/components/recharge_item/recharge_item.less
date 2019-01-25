@@ -1,0 +1,131 @@
+@import "../../../../../base/style/variables";
+
+.recharge-item-container {
+  width: 336px;
+  height: 240px;
+  border:2px solid #EBEBEB;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 25px 0;
+  box-sizing: border-box;
+  &:nth-child(2n) {
+    margin-right: 0;
+  }
+  .wrap {
+    text-align: center;
+    .define-recharge-title {
+      font-size: 32px;
+      font-weight:400;
+      color: #666666;
+    }
+    .title {
+      font-size: 32px;
+      font-weight: 600;
+      color: #666666;
+    }
+    .amount {
+      font-size: 48px;
+      font-family: Arial-BoldMT;
+      font-weight: bold;
+      color: @primary-color;
+      margin: 18px 0 25px;
+      span {
+        font-size: 28px;
+        font-weight: 600;
+      }
+    }
+    .score-recharge {
+      height: 42px;
+      background: @primary-color;
+      border-radius: 21px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight:500;
+      color: #ffffff;
+      padding: 0 22px;
+      img {
+        width: 24px;
+        height: 22px;
+        margin-right: 7px;
+      }
+    }
+    .coupon-recharge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight:500;
+      color: #ffffff;
+      position: relative;
+      .coupon-before {
+        content: '';
+        width: 6px;
+        height: 42px;
+        background-image: url("../../../../assets/images/store_coupon_before.png");
+        background-size: 6px 42px;
+        display: inline-block;
+      }
+      .coupon-content {
+        background-color: @primary-color;
+        height: 42px;
+        padding: 0 20px;
+        line-height: 42px;
+      }
+      .coupon-after {
+        content: '';
+        width: 6px;
+        height: 42px;
+        background-image: url("../../../../assets/images/store_coupon_after.png");
+        background-size: 6px 42px;
+        display: inline-block;
+      }
+    }
+    .am-list-body {
+      background-color: transparent;
+      &::before {
+        display: none;
+      }
+      &::after {
+        display: none;
+      }
+    }
+    .am-list-item.am-input-item {
+      padding-left: 0;
+    }
+    .am-list-item .am-list-line {
+      padding-right: 0;
+    }
+    .am-list-item .am-input-control {
+      font-size: 28px;
+      font-weight: 400;
+      color: #C7C7C7;
+      input {
+        font-size: 28px!important;
+        text-align: center;
+      }
+    }
+  }
+}
+.recharge-item-command-container {
+  position: relative;
+  &:before {
+    content: '';
+    width: 91px;
+    height: 59px;
+    display: inline-block;
+    background-image: url("../../../../assets/images/command.png");
+    background-size: 91px 59px;
+    position: absolute;
+    left: -14px;
+    top: -17px;
+    z-index: 999;
+  }
+}
+.recharge-item-active-container {
+  background: #FFF7F0;
+  border: 3px solid @primary-color;
+}

@@ -1,0 +1,35 @@
+.detail-items-container {
+  background-color: #fff;
+  font-size: 24px;
+  font-weight: 400;
+  .info-item-box {
+    display: flex;
+    justify-content: space-between;
+    line-height: 36px;
+    padding: 8px 0;
+    .name {
+      color: #7A7A7A;
+      width: 27%;
+      &:before {
+        content: '';
+        width: 6px;
+        height: 6px;
+        display: inline-block;
+        border-radius: 50%;
+        background-color: #333333;
+        margin-right: 16px;
+        vertical-align: middle;
+        margin-left: 8px;
+      }
+    }
+    .data {
+      color: #323232;
+      width: 72%;
+    }
+  }
+  .introduction-item-box {
+    color: #808080;
+    line-height: 36px;
+    padding: 8px 0;
+  }
+}

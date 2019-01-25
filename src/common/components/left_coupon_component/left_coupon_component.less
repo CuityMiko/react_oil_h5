@@ -1,0 +1,70 @@
+@import "../../../base/style/variables";
+
+.left-coupon-component-container {
+  width: 100%;
+  .left-content {
+    display: flex;
+    align-items: center;
+    .left-left-content {
+      width: 41%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .left-left-box {
+        .money-box {
+          display: flex;
+          justify-content: center;
+          .money {
+            font-size: 50px;
+            font-weight: 600;
+            color: @primary-color;
+            position: relative;
+            &:before {
+              content: '¥';
+              display: inline-block;
+              position: absolute;
+              font-size: 28px;
+              font-family: Arial-BoldMT;
+              font-weight: bold;
+              left: -15px;
+              top: -8px;
+            }
+          }
+        }
+        .apply-conditions-box {
+          display: flex;
+          justify-content: center;
+          .apply-conditions {
+            margin-top: 25px;
+            font-size: 22px;
+            font-weight: 400;
+            color: #333333;
+            opacity: 0.8;
+          }
+        }
+      }
+    }
+    .left-right-content {
+      width: 59%;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      .left-right-box {
+        color: #333333;
+        font-weight: 400;
+        font-size: 20px;
+        .name {
+          font-size: 32px;
+          font-weight: 500;
+        }
+        .date {
+          opacity:0.6;
+          margin: 25px 0 13px 0;
+        }
+        .apply-goods {
+          opacity:0.6;
+        }
+      }
+    }
+  }
+}

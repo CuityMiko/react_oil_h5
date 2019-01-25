@@ -1,0 +1,77 @@
+@import "variables";
+
+// 公共组件
+@import "../../common/components/components";
+
+// 登录
+@import '../../login/login';
+
+// 404页
+@import '../../common/components/404/notfound';
+
+// 错误页
+@import '../../common/components/error/error';
+
+// 支付错误页
+@import '../../common/components/error/pay_error';
+
+// 首页
+@import '../../home/home';
+
+// 会员卡
+@import '../../member_card/member_card';
+
+// 油卡
+@import '../../oil_card/oil_card';
+
+// 我的信息
+@import '../../my_info/my_info';
+
+// 充值
+@import '../../stored_value/stored_value';
+
+// 积分商城
+@import '../../point_mall/point_mall';
+
+// 卡券
+@import '../../coupon/coupon';
+
+// 支付
+@import '../../payment/payment';
+
+// 分享
+@import '../../share/share';
+
+body,ol,ul,h1,h2,h3,h4,h5,h6,p,th,td,dl,dd,form,fieldset,legend,textarea,select {
+  margin: 0;
+  padding: 0;
+  background-color: #ffffff!important;
+  font-family: "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "\5FAE\8F6F\96C5\9ED1", SimSun, sans-serif;
+}
+
+.grey-back {
+  background-color: #f5f5f5;
+}
+
+// 控制反复弹出复制粘贴的气泡
+body{
+  -moz-user-select: none; /*火狐*/
+  -webkit-user-select: none; /*webkit浏览器*/
+  -ms-user-select: none; /*IE10*/
+  -khtml-user-select: none; /*早期浏览器*/
+  user-select: none;
+}
+
+// 无限滚动
+.tloader {
+  height: 1180px;
+  overflow-y: scroll;
+  -webkit-overflow-scrolling: touch;
+  background-color: #f5f5f5 !important;
+}
+// .tloader .tloader-btn:after{
+//   content: 'Load More';
+// }
+.tloader-progress:before {
+  background-color: @primary-color !important;
+}

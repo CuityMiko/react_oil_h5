@@ -1,0 +1,80 @@
+@import "../../../base/style/variables";
+
+.share-coupon-container {
+  width: 100%;
+  height: 100%;
+  background-color: #fd4538;
+  overflow: visible;
+  .content {
+    width: 100%;
+    background-color: #fd4538;
+    background-image: url("../../assets/images/share_container_bg.png");
+    background-repeat: no-repeat;
+    background-size: 100% 1206px;
+    .station-name-box {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 465px;
+      .station-name-before {
+        width: 72px;
+        height: 55px;
+      }
+      .station-name {
+        font-size: 40px;
+        font-weight: 600;
+        color: #ffffff;
+        text-shadow:0 6px 15px #DD2323;
+        margin: 0 10px;
+      }
+      .station-name-after {
+        width: 72px;
+        height: 54px;
+      }
+    }
+    .share-coupon-class {
+      margin-top: 0;
+    }
+    .text-box {
+      text-align: center;
+      color: #ffffff;
+      line-height: 48px;
+      img {
+        width: 124px;
+        height: 118px;
+      }
+      .title {
+        font-size: 28px;
+        font-weight: 500;
+      }
+      .sub-title {
+        font-size: 24px;
+        font-weight: 400;
+        opacity: 0.8;
+        span {
+          text-decoration: underline;
+        }
+      }
+      .share-button {
+        background:linear-gradient(0deg,rgba(252,206,204,1) 0%,rgba(255,255,255,1) 100%);
+        box-shadow:0 12px 25px 0 rgba(221,35,35,0.8);
+        color: @primary-color;
+        margin-top: 30px;
+      }
+    }
+    .form-box {
+      .go-member-center {
+        text-align: center;
+        font-size: 24px;
+        font-weight: 500;
+        text-decoration: underline;
+        color: #ffffff;
+        margin-top: 45px;
+        padding-bottom: 45px;
+      }
+      .time {
+        color: #ffffff;
+      }
+    }
+  }
+}
