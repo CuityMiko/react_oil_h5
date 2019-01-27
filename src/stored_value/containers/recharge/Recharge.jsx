@@ -16,7 +16,7 @@ class Recharge extends Component {
         // 可重新定义字段判断是否显示tab栏
         cardCount: 0,
         availableAmount: 0,
-        cardSpecId: 0,
+        cardSpecId: 1,
         storedDesc: '-', // 充值说明
         QdefineRecharge: false, // 汽油卡自定义金额
         CdefineRecharge: false, // 柴油卡自定义金额
@@ -31,8 +31,30 @@ class Recharge extends Component {
         GetMemberInfoAction();
         // 绑定Tabs
         setTimeout(() => {
-            this.bindTabs();
+            this.bindCurrentRechargeInfo(() => {
+                this.bindTabs();
+            })
         }, 200)
+    }
+
+    /**
+     * 绑定当前充值项
+     */
+    bindCurrentRechargeInfo = (callback) => {
+        const {specId} = this.props.query;
+        if (specId) {
+            this.setState({
+                cardSpecId: specId
+            }, () => {
+                callback();
+            })
+        } else {
+            this.setState({
+                cardSpecId: 1
+            }, () => {
+                callback();
+            })
+        }
     }
 
     /**
@@ -77,6 +99,7 @@ class Recharge extends Component {
      */
     bindTabs = () => {
         const {MemberInfo} = this.props;
+        const {cardSpecId} = this.state;
         if (MemberInfo != null && MemberInfo.cards.length > 0) {
             let tabs = [];
             MemberInfo.cards.map(card => {
@@ -88,11 +111,12 @@ class Recharge extends Component {
                 }
                 tabs.push(tab);
             })
+            let currtab = tabs.find(t => t.cardSpecId == cardSpecId);
             this.setState({
                 tabs, cardCount: MemberInfo.cards.length, 
-                availableAmount: tabs[0].availableAmount, 
-                cardSpecId: tabs[0].cardSpecId,
-                cardId: tabs[0].cardId
+                availableAmount: currtab ? currtab.availableAmount : tabs[0].availableAmount, 
+                cardSpecId,
+                cardId: currtab ? currtab.cardId : tabs[0].cardId
             }, () => {
                 // 获取规则配置
                 this.GetRechargeConfig();
@@ -201,7 +225,7 @@ class Recharge extends Component {
                     // 如果用户只有单张卡，则不显示tab栏
                     cardCount > 1 ? (
                         <StickyContainer>
-                            <Tabs tabs={tabs} swipeable={false} initialPage={0} renderTabBar={this.renderTabBar} onChange={this.tabChange}>
+                            <Tabs tabs={tabs} swipeable={false} initialPage={(cardSpecId - 1)} renderTabBar={this.renderTabBar} onChange={this.tabChange}>
                                 <RechargeComponent customInputChange={this.customInputChange} handleClick={this.rechargeHandleClick} defineRecharge={defineRecharge} rechargeItems={rechargeItems} cardType= {cardSpecId == 1 ? 'petrol' : 'gas'} account={availableAmount} rechargeIntro={storedDesc} />
                             </Tabs>
                         </StickyContainer>

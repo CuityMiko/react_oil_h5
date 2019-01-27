@@ -65,12 +65,12 @@ class CToB extends Component {
         couponReset: false, // 重置卡券列表
         cardAvailableAmount: 0, // 当前余额
         selSkuId: 0, // 选中的skuID
-        selSkucardSpecId: 0, // 选中SKU对应的卡种ID
+        selSkucardSpecId: 1, // 选中SKU对应的卡种ID
         mbrCardId: 0, // 会员卡ID
         payAuthCode: '', // 支付授权code
-        qrcodeId: 0, // 二维码ID
-        staffId: 0, // 员工ID,表示该笔订单的操作人
-        userId: 0, // 员工对应的用户ID
+        qrcodeId: null, // 二维码ID
+        staffId: null, // 员工ID,表示该笔订单的操作人
+        userId: null, // 员工对应的用户ID
         joinMemberUrl: '' // 加入会员跳转的URL
     };
 
@@ -182,7 +182,7 @@ class CToB extends Component {
                         memberId: res.cards[0].memberId
                     }, () => {
                         // 绑定充值推荐规则
-                        this.bindRechargeRecommendRule(merchantid);
+                        this.bindRechargeRecommendRule(merchantId, undefined);
                         this.mbrCoupons = this.bindCouponData(res.coupons);
                     })
                 } else { // 非会员
@@ -195,7 +195,7 @@ class CToB extends Component {
                         joinMemberUrl: res.joinMemberUrl
                     }, () => {
                         // 绑定充值推荐规则
-                        this.bindRechargeRecommendRule(merchantid);
+                        this.bindRechargeRecommendRule(merchantId, undefined);
                     })
                 }
             }
@@ -210,63 +210,70 @@ class CToB extends Component {
      * 绑定优惠券
      */
     bindCouponData = (coupons) => {
-        let result = [];
-        coupons.map(item => {
-            let applyGoods = '-';
-            let skuids = [];
-            if (item.gasMbrProSkuDTOS && item.gasMbrProSkuDTOS.length > 0) {
-                applyGoods = item.gasMbrProSkuDTOS.filter(s=>s.skuName!=null).map(s=>s.skuName).join('/');
-                skuids = item.gasMbrProSkuDTOS.filter(s=>s.skuName!=null).map(s=>s.id);
-            }
-            let _ritem = {
-                id: item.id,
-                status: item.status,
-                amount: item.couponAmount,
-                leastCost: item.leastCost,
-                name: item.couponName,
-                code: item.code,
-                date: '',
-                applyGoods,
-                skuids,
-                actTimeStart: item.useTimeBegin,
-                actTimeEnd: item.useTimeEnd,
-                couponNumber: item.couponNumber,
-                skus: item.gasMbrProSkuDTOS.map(s=>s.id)
-            }
-            // dateType 卡券使用有效期类型 0-固定时间 1-立即生效
-            if(item.dateType == 0) {
-                _ritem.date = `${moment(item.useTimeBegin).format('MM.DD')} - ${moment(item.useTimeEnd).format('MM.DD')}`;
-            } else if(item.dateType == 1) {
-                _ritem.date = `${moment().format('MM.DD')} - ${moment().add(item.fixedTerm - 1, 'days').format('MM.DD')}`;
-            }
-            result.push(_ritem)
-        })
-        // 绑定使用的优惠券
-        this.bindUseCoupon(coupons);
-        return result;
+        try {
+            let result = [];
+            coupons.map(item => {
+                let applyGoods = '-';
+                let skuids = [];
+                if (item.gasMbrProSkuDTOS && item.gasMbrProSkuDTOS.length > 0) {
+                    applyGoods = item.gasMbrProSkuDTOS.filter(s=>s.skuName!=null).map(s=>s.skuName).join('/');
+                    skuids = item.gasMbrProSkuDTOS.filter(s=>s.skuName!=null).map(s=>s.id);
+                }
+                let _ritem = {
+                    id: item.id,
+                    status: item.status,
+                    amount: item.couponAmount,
+                    leastCost: item.leastCost,
+                    name: item.couponName,
+                    code: item.code,
+                    date: '',
+                    applyGoods,
+                    skuids,
+                    actTimeStart: item.useTimeBegin,
+                    actTimeEnd: item.useTimeEnd,
+                    couponNumber: item.couponNumber,
+                    skus: item.gasMbrProSkuDTOS.map(s=>s.id)
+                }
+                // dateType 卡券使用有效期类型 0-固定时间 1-立即生效
+                if(item.dateType == 0) {
+                    _ritem.date = `${moment(item.useTimeBegin).format('MM.DD')} - ${moment(item.useTimeEnd).format('MM.DD')}`;
+                } else if(item.dateType == 1) {
+                    _ritem.date = `${moment().format('MM.DD')} - ${moment().add(item.fixedTerm - 1, 'days').format('MM.DD')}`;
+                }
+                result.push(_ritem)
+            })
+            // 绑定使用的优惠券
+            this.bindUseCoupon(coupons);
+            return result;
+        } catch (error) {
+            return [];
+        }
     }
 
     /**
      * 绑定使用的优惠券
      */
     bindUseCoupon = (coupons) => {
-        const {couponnum} = this.props.query;
-        const {couponcode} = this.state;
-        if (couponcode == '' && couponnum) {
-            let currc = coupons.find(c=>c.couponNumber == couponnum);
-            if (currc) {
-                this.setState({
-                    couponcode: currc.code,
-                    currentCouponAmount: parseFloat(currc.couponAmount).toFixed(2)
-                }, () => {
-                    this.rebindSkus(currc.gasMbrProSkuDTOS.filter(s=>s.skuName!=null).map(s=>s.id));
-                })
-            } else {
-                this.setState({
-                    couponcode: '',
-                    currentCouponAmount: 0
-                })
+        try {
+            const {couponnum} = this.props.query;
+            const {couponcode} = this.state;
+            if (couponcode == '' && couponnum) {
+                let currc = coupons.find(c=>c.couponNumber == couponnum);
+                if (currc) {
+                    this.setState({
+                        couponcode: currc.code,
+                        currentCouponAmount: parseFloat(currc.couponAmount).toFixed(2)
+                    }, () => {
+                        this.rebindSkus(currc.gasMbrProSkuDTOS.filter(s=>s.skuName!=null).map(s=>s.id));
+                    })
+                } else {
+                    this.setState({
+                        couponcode: '',
+                        currentCouponAmount: 0
+                    })
+                }
             }
+        } catch (error) {
         }
     }
 
@@ -312,6 +319,8 @@ class CToB extends Component {
                     this.setState({coupons: _temp}, () => {
                         // 绑定使用的优惠券
                         this.bindUseCoupon(_temp);
+                        // 绑定最大优惠券
+                        this.bindMaxCoupon(_temp);
                     });
                 }
             } else {
@@ -324,12 +333,42 @@ class CToB extends Component {
                 this.setState({coupons: _temp}, () => {
                     // 绑定使用的优惠券
                     this.bindUseCoupon(_temp);
+                    // 绑定最大优惠券
+                    this.bindMaxCoupon(_temp);
                 });
             }
         } else {
             this.setState({coupons: []}, () => {
                 // 绑定使用的优惠券
                 this.bindUseCoupon([]);
+                // 绑定最大优惠券
+                this.bindMaxCoupon([]);
+            })
+        }
+    }
+
+    /**
+     * 绑定最大优惠券
+     */
+    bindMaxCoupon = (coupons) => {
+        try {
+            if (coupons && coupons.length > 0) {
+                let _tempcoupons = coupons.sort((x, y) => y.amount - x.amount); 
+                let _maxcoupon = _tempcoupons[0];
+                this.setState({
+                    couponcode: _maxcoupon.code,
+                    currentCouponAmount: parseFloat(_maxcoupon.amount).toFixed(2)
+                })
+            } else {
+                this.setState({
+                    couponcode: '',
+                    currentCouponAmount: 0
+                })
+            }
+        } catch (error) {
+            this.setState({
+                couponcode: '',
+                currentCouponAmount: 0
             })
         }
     }
@@ -491,8 +530,16 @@ class CToB extends Component {
     /**
      * 去充值
      */
-    goRecharge = () => {
-        this.props.history.push('/app/recharge');
+    goRecharge = (flag) => {
+        let _specId = 1;
+        if (flag == undefined) {
+            const {selSkucardSpecId} = this.state;
+            _specId = selSkucardSpecId;
+        } else {
+            const {payType} = this.state;
+            _specId = payType == 0 ? 1 : payType;
+        }
+        this.props.history.push('/app/recharge?specId=' + _specId);
     }
 
     /**
@@ -549,6 +596,10 @@ class CToB extends Component {
     toPay = () => {
         const {selSkuId, payAmount, cardAvailableAmount, payType, amount, memberId,
             couponcode, mbrCardId, merchantid, payAuthCode, qrcodeId, staffId, userId, isMember} = this.state;
+        if (amount == '') {
+            Toast.fail('请输入金额!', 1);
+            return;
+        }
         if (selSkuId == 0) {
             Toast.fail('请选择油品!', 1);
             return;
@@ -580,7 +631,7 @@ class CToB extends Component {
             mbrId = memberId;
         }
         let condition = {
-            amount, // 用户输入金额
+            amount: amount == '' ? 0 : parseFloat(amount).toFixed(2), // 用户输入金额
             couponCode: couponcode, // 优惠券核销码
             mbrCardId: payType == 0 ? null : mbrCardId, // 会员卡ID
             mbrId, // 会员ID
@@ -762,7 +813,7 @@ class CToB extends Component {
                                     recommendruleinfo == '' ? null : (
                                         <div className="select-pay-right">
                                             <img src={pay_gift} alt="" />
-                                            <div onClick={this.goRecharge}>{recommendruleinfo.length>15?(recommendruleinfo.substr(0, 15).concat('...')):recommendruleinfo}</div>
+                                            <div onClick={() => this.goRecharge()}>{recommendruleinfo.length>15?(recommendruleinfo.substr(0, 15).concat('...')):recommendruleinfo}</div>
                                         </div>
                                     )
                                 }
@@ -780,7 +831,7 @@ class CToB extends Component {
                                         cards.map((card, index) => {
                                             return (
                                                 <Field key={index} text={card.specId == 1 ? '汽油卡' : '柴油卡'} imgSrc={card.specId == 1 ? petrol_trade : gasoline_trade} subtext={`（剩余：¥${card.availableAmount}）`} customClass="pay-field">
-                                                    <RadioItem key={card.specId} checked={payType === card.specId} disabled={card.availableAmount <= 0} onChange={() => this.onPayTypeChange(card.specId)}/>
+                                                    <RadioItem key={card.specId} checked={payType === card.specId} onChange={() => this.onPayTypeChange(card.specId)}/>
                                                 </Field>
                                             )
                                         })
@@ -811,7 +862,7 @@ class CToB extends Component {
                         <AccountModal
                             payAmount={parseFloat(payAmount).toFixed(2)}
                             availableAmount={parseFloat(cardAvailableAmount).toFixed(2)}
-                            handleClick={() => {this.props.history.push('/app/recharge')}}
+                            handleClick={() => {this.goRecharge(1)}}
                             onClose={() => this.onClose('accountModal')} />
                     </Modal>
                 </WingBlank>

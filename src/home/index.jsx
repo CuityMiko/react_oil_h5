@@ -22,6 +22,7 @@ class Home extends Component {
         dataItems: new Map(),
         title: '',
         content: '',
+        cardSpecId: 1, // 卡种ID
         url: '',
         recommendRechargeRule: '', // 推荐充值
     };
@@ -85,13 +86,17 @@ class Home extends Component {
     bindRecommendRule = (cardSpecId) => {
         try {
             const {MerchantInfo} = this.props;
-            StoreService.GetRechargeRuleData(cardSpecId, MerchantInfo.id).then(res => {
-                if (res != null && res.length > 0) {
-                    let rerules = res.filter(r => r.topRecommended == 1);
-                    this.bindRecommendRuleInfo(rerules);
-                }
-            }).catch(err => {
-                this.setState({recommendRechargeRule: ''});
+            this.setState({
+                cardSpecId
+            }, () => {
+                StoreService.GetRechargeRuleData(cardSpecId, MerchantInfo.id).then(res => {
+                    if (res != null && res.length > 0) {
+                        let rerules = res.filter(r => r.topRecommended == 1);
+                        this.bindRecommendRuleInfo(rerules);
+                    }
+                }).catch(err => {
+                    this.setState({recommendRechargeRule: ''});
+                })
             })
         } catch (error) {
         }
@@ -153,7 +158,8 @@ class Home extends Component {
 
     // 跳转充值规则页面
     goRecharge = () => {
-        this.props.history.push('/app/recharge');
+        const {cardSpecId} = this.state;
+        this.props.history.push('/app/recharge?specId=' + cardSpecId);
     };
 
     // Card组件右侧的自定义区域：显示会员卡详情图片
