@@ -89,7 +89,7 @@ class RechargeSuccess extends Component {
                 }
                 // dateType 卡券使用有效期类型 0-固定时间 1-立即生效
                 if(res.dateType == 0) {
-                    date = `${moment(res.actTimeStart).format('MM.DD')} - ${moment(res.actTimeEnd).format('MM.DD')}`
+                    date = `${moment(res.useTimeBegin).format('MM.DD')} - ${moment(res.useTimeEnd).format('MM.DD')}`
                 } else if(res.dateType == 1) {
                     date = `领取后${res.fixedTerm}天有效`
                 }
@@ -193,8 +193,8 @@ class RechargeSuccess extends Component {
     /**
      * 优惠券去使用
      */
-    goToPay = () => {
-        this.props.history.push('/app/payment')
+    goToPay = (couponNumber) => {
+        this.props.history.push('/app/payment?couponnum=' + couponNumber)
     }
 
     /**
@@ -211,7 +211,7 @@ class RechargeSuccess extends Component {
                             <div className="text">送您一张优惠券</div>
                             <WingBlank size="sm">
                                 <CouponComponent couponItem={couponItem}>
-                                    <MobileButton text="去使用" handleClick={this.goToPay} customClass="shortButton" />
+                                    <MobileButton text="去使用" handleClick={() => this.goToPay(couponItem.couponNumber)} customClass="shortButton" />
                                 </CouponComponent>
                             </WingBlank>
                         </div>
