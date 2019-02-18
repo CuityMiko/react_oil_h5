@@ -150,6 +150,8 @@ class LoginForm extends Component {
         const {inputXY} = this.props;
         if (inputXY) {
             window.scroll(inputXY.data.x, inputXY.data.y);
+        } else {
+            window.scroll(0, 0);
         }
     };
 

@@ -181,7 +181,7 @@ const { getFieldProps } = this.props.form;
   placeholder="请输入"
 >监区</InputItem>
 
-// 获取 form 的值
+// 获取 form 的值 
 this.props.form.getFieldsValue()
 ```
 
