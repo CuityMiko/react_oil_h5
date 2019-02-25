@@ -98,12 +98,15 @@ class CouponDetail extends Component {
 
     bindInfo = () => {
         const {couponObj} = this.state;
-        const data1 = {
+        let data1 = {
             name1: couponObj.applyGoods ? `仅限${couponObj.applyGoods}使用` : '-',
             name2: couponObj.date,
             name3: this.judgeTime(couponObj.useTimeWeek, couponObj.useTimeHour),
             name4: `每位用户限领取${couponObj.getLimit >= 99999 ? couponObj.getLimit : '不限'}张`
         };
+        if (couponObj.payLimit) {
+            data1.name5 = `${this.judgePayLimit(couponObj.payLimit)}`;
+        }
         const data2 = {
             name1: couponObj.remark
         };
@@ -113,6 +116,19 @@ class CouponDetail extends Component {
                 introductionItems: this.bindIntroductionItems(prevState.introductionItems, data2)
             }
         });
+    }
+
+    /**
+     * 判断支付方式
+     */
+    judgePayLimit = (payLimit) => {
+        let payLimits = payLimit.split(',');
+        let payLimitinfo = '限';
+        payLimits.map(c => {
+            if (c == '1') payLimitinfo += '会员卡支付,'
+            if (c == '2') payLimitinfo += '微信支付,'
+        })
+        return payLimitinfo.substring(0, payLimitinfo.length - 1);
     }
 
     /**
@@ -136,10 +152,14 @@ class CouponDetail extends Component {
 
     // 使用须知
     bindInfoItems = (prevMap, data) => {
-        return prevMap.set('适用油品：', data.name1)
-            .set('有效日期：', data.name2)
-            .set('使用时段：', data.name3)
-            .set('每人限领：', data.name4)
+        let prevMap2 = prevMap.set('适用油品：', data.name1)
+        .set('有效日期：', data.name2)
+        .set('使用时段：', data.name3)
+        .set('每人限领：', data.name4)
+        if (data.name5) {
+            prevMap2.set('支付方式：', data.name5);
+        }
+        return prevMap2
     };
 
     // 卡券说明

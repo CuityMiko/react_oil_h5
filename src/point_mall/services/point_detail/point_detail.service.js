@@ -60,7 +60,10 @@ const GetPointDetailList = async (flag) => {
                     GetPointDetail(1),
                     GetPointDetail(2),
                     GetPointDetail(3),
-                    GetPointDetail(4)
+                    GetPointDetail(4),
+                    GetPointDetail(5),
+                    GetPointDetail(6),
+                    GetPointDetail(7)
                 ]);
                 deferred.resolve(result0);
                 break;
@@ -68,14 +71,17 @@ const GetPointDetailList = async (flag) => {
                 const result1 = await Promise.all([
                     GetPointDetail(0), 
                     GetPointDetail(2),
-                    GetPointDetail(4)
+                    GetPointDetail(4),
+                    GetPointDetail(5),
+                    GetPointDetail(7)
                 ]);
                 deferred.resolve(result1);
                 break;
             case 2:
                 const result2 = await Promise.all([ 
                     GetPointDetail(1),
-                    GetPointDetail(3)
+                    GetPointDetail(3),
+                    GetPointDetail(6)
                 ]);
                 deferred.resolve(result2);
                 break;

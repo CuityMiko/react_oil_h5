@@ -10,3 +10,6 @@ export const ToPayUrl = '/h5/order/payment/gas/ctb-pay';
 
 // 支付后优惠券
 export const GetAfterPayCouponUrl = '/h5/mbr/pay-mar/get';
+
+// 关注微信公众号
+export const GetWXMerchantUrl = '/h5/mbr/wx-mp/get-qrcode-url';

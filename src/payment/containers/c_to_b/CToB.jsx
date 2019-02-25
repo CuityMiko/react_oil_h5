@@ -71,7 +71,8 @@ class CToB extends Component {
         qrcodeId: null, // 二维码ID
         staffId: null, // 员工ID,表示该笔订单的操作人
         userId: null, // 员工对应的用户ID
-        joinMemberUrl: '' // 加入会员跳转的URL
+        joinMemberUrl: '', // 加入会员跳转的URL
+        couponPayLimit: [] // 优惠券支付选项
     };
 
     componentWillMount() {
@@ -207,6 +208,19 @@ class CToB extends Component {
     }
 
     /**
+     * 判断支付方式
+     */
+    judgePayLimit = (payLimit) => {
+        let payLimits = payLimit.split(',');
+        let payLimitinfo = '限';
+        payLimits.map(c => {
+            if (c == '1') payLimitinfo += '会员卡支付,'
+            if (c == '2') payLimitinfo += '微信支付,'
+        })
+        return payLimitinfo.substring(0, payLimitinfo.length - 1);
+    }
+
+    /**
      * 绑定优惠券
      */
     bindCouponData = (coupons) => {
@@ -232,7 +246,12 @@ class CToB extends Component {
                     actTimeStart: item.useTimeBegin,
                     actTimeEnd: item.useTimeEnd,
                     couponNumber: item.couponNumber,
-                    skus: item.gasMbrProSkuDTOS.map(s=>s.id)
+                    skus: item.gasMbrProSkuDTOS.map(s=>s.id),
+                    payLimit: item.payLimit != null ? item.payLimit.split(',') : [],
+                }
+                // 支付方式
+                if (item.payLimit) {
+                    _ritem.payType = this.judgePayLimit(item.payLimit);
                 }
                 // dateType 卡券使用有效期类型 0-固定时间 1-立即生效
                 if(item.dateType == 0) {
@@ -262,7 +281,8 @@ class CToB extends Component {
                 if (currc) {
                     this.setState({
                         couponcode: currc.code,
-                        currentCouponAmount: parseFloat(currc.couponAmount).toFixed(2)
+                        currentCouponAmount: parseFloat(currc.couponAmount).toFixed(2),
+                        couponPayLimit: currc.payLimit != null ? currc.payLimit.split(',') : [],
                     }, () => {
                         this.rebindSkus(currc.gasMbrProSkuDTOS.filter(s=>s.skuName!=null).map(s=>s.id));
                     })
@@ -280,16 +300,16 @@ class CToB extends Component {
     /**
      * 获取优惠券Code
      */
-    getCouponClick = (val, amount) => {
+    getCouponClick = (val, amount, payLimit) => {
         const _self = this;
         if (val && amount) {
-            _self.setState({couponcode: val, currentCouponAmount: parseFloat(amount).toFixed(2)}, () => {
+            _self.setState({couponcode: val, currentCouponAmount: parseFloat(amount).toFixed(2), couponPayLimit: payLimit}, () => {
                 _self.onClose('selectCouponModal');
                 // 重新计算金额
                 _self.computeAmount();
             });
         } else {
-            _self.setState({couponcode: '', currentCouponAmount: 0}, () => {
+            _self.setState({couponcode: '', currentCouponAmount: 0, couponPayLimit: payLimit}, () => {
                 _self.onClose('selectCouponModal');
                 // 重新计算金额
                 _self.computeAmount();
@@ -595,16 +615,32 @@ class CToB extends Component {
      */
     toPay = () => {
         const {selSkuId, payAmount, cardAvailableAmount, payType, amount, memberId,
-            couponcode, mbrCardId, merchantid, payAuthCode, qrcodeId, staffId, userId, isMember} = this.state;
+            couponcode, mbrCardId, merchantid, payAuthCode, qrcodeId, staffId, userId, isMember, couponPayLimit} = this.state;
+        // 金额必输
         if (amount == '') {
             Toast.fail('请输入金额!', 1);
             return;
         }
+        // 油品必选
         if (selSkuId == 0) {
             Toast.fail('请选择油品!', 1);
             return;
         }
-        if (payType != 0) { // 非微信支付，需判断卡片余额
+        // 优惠券支付方式限制
+        if (couponPayLimit.length > 0) {
+            if (couponPayLimit.length == 1) {
+                if (couponPayLimit[0] == '2' && payType != 0) { // 仅限微信支付
+                    Toast.info('此券只能使用微信支付', 2);
+                    return;
+                }
+                if (couponPayLimit[0] == '1' && payType == 0) { // 仅限会员卡支付
+                    Toast.info(`此券只能使用油卡支付`, 2);
+                    return;
+                }
+            }
+        }
+        // 非微信支付，需判断卡片余额
+        if (payType != 0) { 
             if (payAmount > cardAvailableAmount) {
                 this.showModal('accountModal');
                 return;
@@ -618,7 +654,8 @@ class CToB extends Component {
                 return;
             }
         }
-        if (amount !=  '' && payAmount <= 0 && payType == 0) { // 不使用微信支付
+        // 不使用微信支付
+        if (amount !=  '' && payAmount <= 0 && payType == 0) { 
             Toast.fail('请选择支付方式!', 1);
             return;
         }

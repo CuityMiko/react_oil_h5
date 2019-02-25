@@ -14,6 +14,11 @@ export function getPointType(type) {
             return '退款扣除';
         case 4:
             return '开卡注册';
+        case 5:
+        case 6:
+            return '手动修改';
+        case 7:
+            return '会员导入';
         default:
             return '-';
     }

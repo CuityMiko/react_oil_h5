@@ -5,7 +5,7 @@
 import q from 'q';
 
 import httpHelper from '@/base/axios/http_helper';
-import {GetSkuDataUrl, ToPayUrl, GetAfterPayCouponUrl} from './payment.url';
+import {GetSkuDataUrl, ToPayUrl, GetAfterPayCouponUrl, GetWXMerchantUrl} from './payment.url';
 
 /**
  * 获取sku
@@ -58,8 +58,25 @@ const GetAfterPayCoupon = (ordernum) => {
     return deferred.promise;
 }
 
+/**
+ * 获取关注微信公众号链接
+ */
+const GetWXMerchant = (merchantid) => {
+    const deferred = q.defer();
+    let url = `${GetWXMerchantUrl}/${merchantid}`;
+    httpHelper.get(url)
+        .then((res) => {
+            deferred.resolve(res);
+        })
+        .catch((err) => {
+            deferred.reject(err);
+        });
+    return deferred.promise;
+}
+
 export default {
     GetSkuData,
     ToPay,
-    GetAfterPayCoupon
+    GetAfterPayCoupon,
+    GetWXMerchant
 }

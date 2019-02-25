@@ -21,21 +21,23 @@ class SelectCouponPopup extends Component {
     state = {
         // 判断卡券是否被选中
         value: '',
-        amount: 0
+        amount: 0,
+        payLimit: [] // 支付方式
     };
 
     componentWillReceiveProps(newProps) {
         if (newProps.isReset) {
-            this.setState({value: '', amount: 0});
+            this.setState({value: '', amount: 0, payLimit: []});
         } else {
-            this.setState({value: newProps.code});
+            this.setState({value: newProps.code, payLimit: newProps.payLimit});
         }
     }
 
-    onChange = (value, amount) => () => {
+    onChange = (value, amount, payLimit) => () => {
         this.setState({
             value,
-            amount
+            amount,
+            payLimit
         })
     };
 
@@ -43,8 +45,8 @@ class SelectCouponPopup extends Component {
      * 点击确定按钮
      */
     buttonClick = () => {
-        const {value, amount} = this.state;
-        this.props.getCouponClick(value, amount);
+        const {value, amount, payLimit} = this.state;
+        this.props.getCouponClick(value, amount, payLimit);
     }
 
     /**
@@ -55,7 +57,7 @@ class SelectCouponPopup extends Component {
             value: '',
             amount: 0
         }, () => {
-            this.props.getCouponClick('', 0)
+            this.props.getCouponClick('', 0, [])
         })
     }
 
@@ -91,7 +93,7 @@ class SelectCouponPopup extends Component {
                                     >
                                         <RadioItem key={couponItem.code}
                                             checked={value == '' ? code == couponItem.code : value == couponItem.code}
-                                            onChange={this.onChange(couponItem.code, couponItem.amount)}
+                                            onChange={this.onChange(couponItem.code, couponItem.amount, couponItem.payLimit)}
                                         />
                                     </CouponComponent>
                                 )

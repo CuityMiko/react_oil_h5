@@ -68,9 +68,12 @@ class PointDetail extends Component {
             case 0:
             case 2:
             case 4:
+            case 5:
+            case 7:
                 return `+${score} 积分`;
             case 1:
             case 3:
+            case 6:
                 return `-${score} 积分`;
             default:
                 return '-';
@@ -107,7 +110,7 @@ class PointDetail extends Component {
         const {dataSource, currentflag, modal} = this.state;
         const {MemberInfo} = this.props;
         return (
-            <div className="point-list-container">
+            <div className="point-list-container" style={modal ? {overflow: 'hidden'}: {overflow: 'auto'}}>
                 <StorePointListHeader
                     fieldImg={point_diamond}
                     fieldText={MemberInfo && MemberInfo.availableScore.toString() ? MemberInfo.availableScore.toString() : '0'}

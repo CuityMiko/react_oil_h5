@@ -82,7 +82,13 @@ class PointDetailContent extends Component {
                 return listItems.score;
             case 1:
             case 3:
-                return (0-listItems.score);
+                return (0 - listItems.score);
+            case 5: // 手动修改 增加
+                return listItems.score;
+            case 6: // 手动修改 减少
+                return (0 - listItems.score);
+            case 7: // 会员导入
+                return listItems.score;
             default:
                 return 0;
         }

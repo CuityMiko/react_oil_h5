@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { WingBlank, WhiteSpace } from 'antd-mobile';
 import {connect} from 'react-redux';
 import moment from 'moment';
+import * as QrCode from 'qrcode.react';
 
 import Field from '@/common/components/field/Field';
 import CouponComponent from "@/common/components/coupon_component/CouponComponent";
@@ -19,7 +20,8 @@ class PaySuccess extends Component {
         couponItem: null,
         orderAmount: 0, // 订单金额
         payAmount: 0, // 支付金额
-        discountAmount: 0 // 优惠金额
+        discountAmount: 0, // 优惠金额
+        merchantWXUrl: '' // 商家微信公众号链接
     };
 
     componentWillMount() {
@@ -133,8 +135,21 @@ class PaySuccess extends Component {
         this.props.history.push('/app/home');
     }
 
+    /**
+     * 关注商家微信公众号
+     */
+    GetWXMerchant = () => {
+        const {MerchantInfo} = this.props;
+        const _self = this;
+        if (MerchantInfo) {
+            PaymentService.GetWXMerchant(MerchantInfo.id).then((res) => {
+                _self.setState({merchantWXUrl: res});
+            })
+        }
+    }
+
     render() {
-        const {orderAmount, payAmount, discountAmount} = this.state;
+        const {orderAmount, payAmount, discountAmount, isMember, merchantWXUrl} = this.state;
         return (
             <div className="pay-success-container">
                 <div className="header">
@@ -155,6 +170,17 @@ class PaySuccess extends Component {
                     <WingBlank size="md">
                         <MobileButton text="回到首页" handleClick={this.goHome} buttonClass="longButton" />
                     </WingBlank>
+                    <WhiteSpace size="lg"/>
+                    {
+                        !isMember && merchantWXUrl != '' ? <WingBlank size="md">
+                            <div style={{'textAlign': 'center'}}>
+                                <span>长按下方二维码关注商家微信公众号</span>
+                                <WhiteSpace />
+                                <QrCode value={merchantWXUrl} size={90}/>
+                            </div>
+                        </WingBlank> : null
+                    }
+                    
                 </WingBlank>
             </div>
         )

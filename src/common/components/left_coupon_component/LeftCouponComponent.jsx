@@ -33,7 +33,8 @@ class LeftCouponComponent extends Component {
             leastCost,
             name,
             date,
-            applyGoods
+            applyGoods,
+            payType
         } = couponItem;
 
         const containerClass = classnames('left-coupon-component-container', customClass);
@@ -54,8 +55,11 @@ class LeftCouponComponent extends Component {
                     <div className="left-right-content">
                         <div className="left-right-box">
                             <div className="name">{name ? name.length>7?name.substring(0,7).concat('...'):name:''}</div>
-                            <div className="date">有效日期：{date}</div>
-                            <div className="apply-goods">适用油品：{applyGoods ? applyGoods.length>7?applyGoods.substring(0,7).concat('...'):applyGoods:''}</div>
+                            <div className="item date">有效日期：{date}</div>
+                            <div className="item">适用油品：{applyGoods ? applyGoods.length>7?applyGoods.substring(0,7).concat('...'):applyGoods:''}</div>
+                            {
+                                payType ? <div className="item">支付方式：{payType}</div> : null
+                            }
                         </div>
                     </div>
                 </div>

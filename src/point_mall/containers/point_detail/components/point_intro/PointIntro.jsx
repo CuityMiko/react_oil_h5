@@ -77,7 +77,7 @@ class PointIntro extends Component {
         let result = new Map();
         if (data && data.length > 0) {
             data.map((item, index) => {
-                result.set(`--${index}`, item);
+                result.set(`--${index}`, item.length>13?item.substr(0,13).concat('...'):item);
             })
         }
         return result;
