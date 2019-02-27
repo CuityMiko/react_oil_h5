@@ -72,7 +72,8 @@ class CToB extends Component {
         staffId: null, // 员工ID,表示该笔订单的操作人
         userId: null, // 员工对应的用户ID
         joinMemberUrl: '', // 加入会员跳转的URL
-        couponPayLimit: [] // 优惠券支付选项
+        couponPayLimit: [], // 优惠券支付选项
+        noSelCoupon: false // 不选择券
     };
 
     componentWillMount() {
@@ -214,10 +215,10 @@ class CToB extends Component {
         let payLimits = payLimit.split(',');
         let payLimitinfo = '限';
         payLimits.map(c => {
-            if (c == '1') payLimitinfo += '会员卡支付,'
-            if (c == '2') payLimitinfo += '微信支付,'
+            if (c == '1') payLimitinfo += '会员卡、'
+            if (c == '2') payLimitinfo += '微信、'
         })
-        return payLimitinfo.substring(0, payLimitinfo.length - 1);
+        return payLimitinfo.substring(0, payLimitinfo.length - 1) + '支付';
     }
 
     /**
@@ -303,13 +304,13 @@ class CToB extends Component {
     getCouponClick = (val, amount, payLimit) => {
         const _self = this;
         if (val && amount) {
-            _self.setState({couponcode: val, currentCouponAmount: parseFloat(amount).toFixed(2), couponPayLimit: payLimit}, () => {
+            _self.setState({couponcode: val, currentCouponAmount: parseFloat(amount).toFixed(2), couponPayLimit: payLimit, noSelCoupon: true}, () => {
                 _self.onClose('selectCouponModal');
                 // 重新计算金额
                 _self.computeAmount();
             });
         } else {
-            _self.setState({couponcode: '', currentCouponAmount: 0, couponPayLimit: payLimit}, () => {
+            _self.setState({couponcode: '', currentCouponAmount: 0, couponPayLimit: payLimit, noSelCoupon: true}, () => {
                 _self.onClose('selectCouponModal');
                 // 重新计算金额
                 _self.computeAmount();
@@ -329,7 +330,7 @@ class CToB extends Component {
      */
     reBindCoupon = () => {
         let _coupons = this.mbrCoupons;
-        const {payAmount, actAmount, amount, selSkuId} = this.state;
+        const {payAmount, actAmount, amount, selSkuId, noSelCoupon} = this.state;
         if (_coupons && _coupons.length > 0) {
             if (amount == '') { // 没有输入金额
                 // 根据SKU筛选
@@ -339,23 +340,38 @@ class CToB extends Component {
                     this.setState({coupons: _temp}, () => {
                         // 绑定使用的优惠券
                         this.bindUseCoupon(_temp);
-                        // 绑定最大优惠券
-                        this.bindMaxCoupon(_temp);
+                        if (!noSelCoupon) {
+                            // 绑定最大优惠券
+                            this.bindMaxCoupon(_temp);
+                        }
                     });
                 }
             } else {
-                let nowamount = payAmount + Number(actAmount);
+                let nowamount = Number(payAmount) + Number(actAmount);
                 nowamount = nowamount > 0 ? nowamount : 0;
                 // 筛选金额
                 let newcoupons = _coupons.filter(c => c.leastCost <= parseFloat(nowamount).toFixed());
-                // 筛选SKU
-                let _temp = newcoupons.filter(c => c.skus.indexOf(selSkuId) > -1);
-                this.setState({coupons: _temp}, () => {
-                    // 绑定使用的优惠券
-                    this.bindUseCoupon(_temp);
-                    // 绑定最大优惠券
-                    this.bindMaxCoupon(_temp);
-                });
+                if (selSkuId) {
+                    // 筛选SKU
+                    let _temp = newcoupons.filter(c => c.skus.indexOf(selSkuId) > -1);
+                    this.setState({coupons: _temp}, () => {
+                        // 绑定使用的优惠券
+                        this.bindUseCoupon(_temp);
+                        if (!noSelCoupon) {
+                            // 绑定最大优惠券
+                            this.bindMaxCoupon(_temp);
+                        }
+                    });
+                } else {
+                    this.setState({coupons: newcoupons}, () => {
+                        // 绑定使用的优惠券
+                        this.bindUseCoupon(newcoupons);
+                        if (!noSelCoupon) {
+                            // 绑定最大优惠券
+                            this.bindMaxCoupon(newcoupons);
+                        }
+                    });
+                }
             }
         } else {
             this.setState({coupons: []}, () => {

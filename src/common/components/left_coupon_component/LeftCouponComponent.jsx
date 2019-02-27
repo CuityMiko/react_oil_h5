@@ -58,7 +58,7 @@ class LeftCouponComponent extends Component {
                             <div className="item date">有效日期：{date}</div>
                             <div className="item">适用油品：{applyGoods ? applyGoods.length>7?applyGoods.substring(0,7).concat('...'):applyGoods:''}</div>
                             {
-                                payType ? <div className="item">支付方式：{payType}</div> : null
+                                payType ? <div className="item">{payType}</div> : null
                             }
                         </div>
                     </div>

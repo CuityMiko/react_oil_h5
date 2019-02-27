@@ -24,7 +24,8 @@ class MyInfo extends Component {
         date: null,
         sexdata: [
             {label: '男', value: '1'},
-            {label: '女', value: '0'}
+            {label: '女', value: '0'},
+            {label: '保密', value: '2'}
         ],
         sex: ['1'],
         nikeName: '',
