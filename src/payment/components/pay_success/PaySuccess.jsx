@@ -33,6 +33,8 @@ class PaySuccess extends Component {
             if (MemberInfo) {
                 GetMemberInfoAction();
             }
+            // 关注微信公众号
+            this.GetWXMerchant();
         }, 200)
     }
 
@@ -143,13 +145,21 @@ class PaySuccess extends Component {
         const _self = this;
         if (MerchantInfo) {
             PaymentService.GetWXMerchant(MerchantInfo.id).then((res) => {
-                _self.setState({merchantWXUrl: res});
+                _self.setState({merchantWXUrl: res}, () => {
+                    setTimeout(() => {
+                        let canvas = document.getElementById('wxcode');
+                        let imgurl = canvas.toDataURL("image/png");
+                        _self.setState({
+                            imgurl
+                        })
+                    }, 300)
+                });
             })
         }
     }
 
     render() {
-        const {orderAmount, payAmount, discountAmount, isMember, merchantWXUrl} = this.state;
+        const {orderAmount, payAmount, discountAmount, isMember, merchantWXUrl, imgurl} = this.state;
         return (
             <div className="pay-success-container">
                 <div className="header">
@@ -172,11 +182,17 @@ class PaySuccess extends Component {
                     </WingBlank>
                     <WhiteSpace size="lg"/>
                     {
-                        !isMember && merchantWXUrl != '' ? <WingBlank size="md">
+                        merchantWXUrl != '' && merchantWXUrl != null ? <WingBlank size="md">
                             <div style={{'textAlign': 'center'}}>
-                                <span>长按下方二维码关注商家微信公众号</span>
-                                <WhiteSpace />
-                                <QrCode value={merchantWXUrl} size={90}/>
+                                <QrCode value={merchantWXUrl} size={120} id="wxcode" style={{display: 'none'}}/>
+                                {
+                                    imgurl ? <div>
+                                        <span style={{fontSize: 15}}>长按下方二维码关注商家微信公众号</span>
+                                        <WhiteSpace size="sm" />
+                                        <img src={imgurl} style={{width: 150, height: 150}}/>
+                                        <WhiteSpace size="sm" />
+                                    </div>: null
+                                }
                             </div>
                         </WingBlank> : null
                     }

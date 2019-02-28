@@ -50,7 +50,7 @@ const GetPointDetail = (type) => {
  * 获取积分明细列表
  * @param {*} flag 0: 全部 1: 增加 2: 减少
  */
-const GetPointDetailList = async (flag) => {
+const GetPointDetailList0 = async (flag) => {
     const deferred = q.defer();
     try {
         switch (flag) {
@@ -92,6 +92,23 @@ const GetPointDetailList = async (flag) => {
         deferred.reject('error');
     }
     return deferred.promise;
+}
+
+/**
+ * 获取积分明细列表
+ * @param {*} flag 0: 全部 1: 增加 2: 减少
+ */
+const GetPointDetailList = (flag) => {
+    switch (flag) {
+        case 0:
+            return GetPointDetail([0, 1, 2, 3, 4, 5, 6, 7].toString());
+        case 1:
+            return GetPointDetail([0, 2, 4, 5, 7].toString());
+        case 2:
+            return GetPointDetail([1, 3, 6].toString());
+        default:
+            return GetPointDetail([0, 1, 2, 3, 4, 5, 6, 7].toString());
+    }
 }
 
 /**

@@ -92,30 +92,33 @@ class StoredValueDetail extends Component {
      */
     GetRechargeDetailInfo = () => {
         const id = this.props.params.id;
-        const {MemberInfo} = this.props;
-        RechargeService.GetRechargeDetailInfo(id).then(res => {
-            if (res != null) {
-                let result = {
-                    // orderNumber: '123456789',
-                    // chargeNumber: '123456789',
-                    // refundNumber: '123456789',
-                    amount: res.amount,
-                    flag: res.tradeType,
-                    // gift: res.couponName || '-',
-                    mobile: MemberInfo.mobile || '-',
-                    type: getRechargeType(res.tradeType) || '-',
-                    tradeCard: res.cardSpecText || '-',
-                    method: res.payEntryText || '-',
-                    time: moment(res.tradeTime).format('YYYY.MM.DD HH:mm:ss') || '-',
-                    afterTradeMoney: res.postTradingBalance || '-'
+        const merchantId = this.props.query.merchantId;
+        // 微信公众号跳转过来保存商户ID
+        if (merchantId) {
+            sessionStorage.setItem('wxmerchantId', merchantId);
+        }
+        setTimeout(() => {
+            const {MemberInfo} = this.props;
+            RechargeService.GetRechargeDetailInfo(id).then(res => {
+                if (res != null) {
+                    let result = {
+                        amount: res.amount,
+                        flag: res.tradeType,
+                        mobile: MemberInfo.mobile || '-',
+                        type: getRechargeType(res.tradeType) || '-',
+                        tradeCard: res.cardSpecText || '-',
+                        method: res.payEntryText || '-',
+                        time: moment(res.tradeTime).format('YYYY.MM.DD HH:mm:ss') || '-',
+                        afterTradeMoney: res.postTradingBalance || '-'
+                    }
+                    // 修改页面Title
+                    this.GetPageTitle(result.type);
+                    this.setState({listItems: result}, () => {
+                        this.bindMap();
+                    });
                 }
-                // 修改页面Title
-                this.GetPageTitle(result.type);
-                this.setState({listItems: result}, () => {
-                    this.bindMap();
-                });
-            }
-        })
+            })
+        }, 500)
     }
 
     /**

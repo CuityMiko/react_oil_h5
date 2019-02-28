@@ -15,6 +15,11 @@ class PointDetailContent extends Component {
     };
 
     componentWillMount() {
+        const merchantId = this.props.query.merchantId;
+        if (merchantId) {
+            // 微信公众号跳转过来保存商户ID
+            sessionStorage.setItem('wxmerchantId', merchantId);
+        }
         PointDetailService.GetPointDetailInfo(this.props.params.id).then(res => {            
             this.bindData(res);
         })

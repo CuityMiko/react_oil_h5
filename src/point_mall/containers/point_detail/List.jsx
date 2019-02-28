@@ -40,24 +40,23 @@ class PointDetail extends Component {
         let dataSource = [];
         if (data != null && data.length > 0) {
             data.map(item => {
-                if (item != null && item.length > 0) {
-                    item.map(detail => {
-                        if (detail) {
-                            const pointdetail = {
-                                id: detail.id,
-                                title: getPointType(detail.type),
-                                time: moment(detail.createTime).format('YYYY.MM.DD HH:mm:ss'),
-                                data: this.getScore(detail.score, detail.type),
-                                timer: detail.createTime
-                            }
-                            dataSource.push(pointdetail);
-                        }
-                    })
+                if (item != null) {
+                    const pointdetail = {
+                        id: item.id,
+                        title: getPointType(item.type),
+                        time: moment(item.createTime).format('YYYY.MM.DD HH:mm:ss'),
+                        data: this.getScore(item.score, item.type),
+                        timer: item.createTime,
+                        createTime: item.createTime
+                    }
+                    dataSource.push(pointdetail);
                 }
             })
+            dataSource = dataSource.sort((x, y) => y.createTime - x.createTime);
+            this.setState({dataSource})
+        } else {
+            this.setState({dataSource})
         }
-        dataSource = dataSource.sort((x, y) => y - x);
-        this.setState({dataSource})
     }
 
     /**

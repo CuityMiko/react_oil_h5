@@ -12,4 +12,4 @@ export const ToPayUrl = '/h5/order/payment/gas/ctb-pay';
 export const GetAfterPayCouponUrl = '/h5/mbr/pay-mar/get';
 
 // 关注微信公众号
-export const GetWXMerchantUrl = '/h5/mbr/wx-mp/get-qrcode-url';
+export const GetWXMerchantUrl = '/h5/wx/open-mp/get-qrcode-link';

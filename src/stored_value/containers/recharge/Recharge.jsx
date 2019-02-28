@@ -34,7 +34,7 @@ class Recharge extends Component {
             this.bindCurrentRechargeInfo(() => {
                 this.bindTabs();
             })
-        }, 200)
+        }, 500)
     }
 
     /**

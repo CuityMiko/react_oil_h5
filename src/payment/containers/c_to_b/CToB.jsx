@@ -433,7 +433,7 @@ class CToB extends Component {
                     price: c.price || 0, // 原价
                     mbrPrice: c.mbrPrice, // 会员优惠价
                     nonMbrPrice: c.nonMbrPrice, // 非会员优惠价
-                    cardSpecId: (c.matchCardSpecIds[0] || 0)}))
+                    cardSpecId: (c.matchCardSpecIds != null ? c.matchCardSpecIds[0] : 0)}))
                 this.mcskus = oildata;
                 this.setState({oilPros: oildata}, () => {
                     // 判断是否是会员

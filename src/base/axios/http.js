@@ -34,7 +34,11 @@ service.interceptors.response.use(
         if (sessionStorage.getItem('merchantinfo')) {
           window.location.href = `${window.location.origin}#/app/login/${JSON.parse(sessionStorage.getItem('merchantinfo')).id}`;
         } else {
-          window.location.href = `${window.location.origin}#/app/login`;
+          if (sessionStorage.getItem('wxmerchantId')) {
+            window.location.href = `${window.location.origin}#/app/login/${sessionStorage.getItem('wxmerchantId')}`;
+          } else {
+            window.location.href = `${window.location.origin}#/app/login`;
+          }
         }
       } catch (error) {
         Toast.fail('系统错误');
