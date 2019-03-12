@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { WingBlank, WhiteSpace, Toast } from 'antd-mobile';
 import moment from 'moment';
 import {connect} from 'react-redux';
+import QueueAnim from 'rc-queue-anim';
 
 import Field from '@/common/components/field/Field';
 import MobileButton from '@/common/components/mobile_button/MobileButton';
@@ -78,9 +79,9 @@ class CouponDetail extends Component {
                 } else if(res.dateType == 1) {
                     // 从卡包过来的话，显示有效日期，否则显示几天内有效
                     if(query.flag && query.flag == 'package') {
-                        date = `${moment().format('YYYY.MM.DD')} - ${moment().add(res.fixedTerm-1, 'days').format('YYYY.MM.DD')}`
+                        date = `${moment(res.getTime).format('YYYY.MM.DD')} - ${moment().add(res.fixedTerm-1, 'days').format('YYYY.MM.DD')}`
                     } else {
-                        date = `领取后${res.fixedTerm}天有效`
+                        date = `领取后${res.fixedTerm}天内有效`
                     }
                 }
                 this.setState({couponObj: {...res, applyGoods, date}}, () => {
@@ -102,7 +103,7 @@ class CouponDetail extends Component {
             name1: couponObj.applyGoods ? `仅限${couponObj.applyGoods}使用` : '-',
             name2: couponObj.date,
             name3: this.judgeTime(couponObj.useTimeWeek, couponObj.useTimeHour),
-            name4: `每位用户限领取${couponObj.getLimit >= 99999 ? couponObj.getLimit : '不限'}张`
+            name4: `${couponObj.getLimit < 99999 ? `每位用户限领取${couponObj.getLimit}张` : '每位用户不限张数'}`
         };
         if (couponObj.payLimit) {
             data1.name5 = `${this.judgePayLimit(couponObj.payLimit)}`;
@@ -164,7 +165,7 @@ class CouponDetail extends Component {
 
     // 卡券说明
     bindIntroductionItems = (prevMap, data) => {
-        return prevMap.set('', data.name1 || '无')
+        return prevMap.set('', data.name1 || '暂无说明')
     };
 
     // 判断显示的元素
@@ -331,44 +332,46 @@ class CouponDetail extends Component {
         } = couponObj;
         const stationItems = this.GetStation();
         return (
-            <div className="animated fadeIn coupon-detail-container">
-                <div className="coupon-detail-wrap">
-                    <WingBlank size="sm">
-                        <div className="coupon-detail-box">
-                            <div className="coupon-detail-content">
-                                <WingBlank size="sm">
-                                    <Field text={name || ''} imgSrc={logo} customClass="coupon-detail-share-field">
-                                        {/*<div className="field-right-content" onClick={this.showModal('modal')}>*/}
-                                        {/*<img className="icon" src={share_icon} alt="" />*/}
-                                        {/*<div className="share">分享</div>*/}
-                                        {/*</div>*/}
-                                    </Field>
-                                    <PopupComponent onClose={this.onClose('modal')} visible={modal} direction="flex-start">
-                                        <div className="share-popup-container">
-                                            <img src={share_popup} alt="" />
+            <QueueAnim style={{height:'100%'}} type={['right', 'left']} delay={200} duration={1500} leaveReverse={true} forcedReplay={true}>
+                <div className="animated fadeIn coupon-detail-container" key="coupon_square_detail">
+                    <div className="coupon-detail-wrap">
+                        <WingBlank size="sm">
+                            <div className="coupon-detail-box">
+                                <div className="coupon-detail-content">
+                                    <WingBlank size="sm">
+                                        <Field text={name || ''} imgSrc={logo} customClass="coupon-detail-share-field">
+                                            {/*<div className="field-right-content" onClick={this.showModal('modal')}>*/}
+                                            {/*<img className="icon" src={share_icon} alt="" />*/}
+                                            {/*<div className="share">分享</div>*/}
+                                            {/*</div>*/}
+                                        </Field>
+                                        <PopupComponent onClose={this.onClose('modal')} visible={modal} direction="flex-start">
+                                            <div className="share-popup-container">
+                                                <img src={share_popup} alt="" />
+                                            </div>
+                                        </PopupComponent>
+                                        <div className="middle-content">
+                                            <div className="money">¥{amount}</div>
+                                            <div className="apply-conditions">{leastCost === 0 ? '任意金额': `满¥${leastCost}元`}可用</div>
+                                            {this.judge(couponObj)}
                                         </div>
-                                    </PopupComponent>
-                                    <div className="middle-content">
-                                        <div className="money">¥{amount}</div>
-                                        <div className="apply-conditions">满{leastCost === 0 ? '任意金额': leastCost}可用</div>
-                                        {this.judge(couponObj)}
-                                    </div>
-                                    <DetailItem detailItems={infoItems}>
-                                        <Field imgSrc={info_icon} text="使用须知" customClass="coupon-detail-field" />
-                                    </DetailItem>
+                                        <DetailItem detailItems={infoItems}>
+                                            <Field imgSrc={info_icon} text="使用须知" customClass="coupon-detail-field" />
+                                        </DetailItem>
+                                        <WhiteSpace size="xs" />
+                                        <DetailItem detailItems={introductionItems}>
+                                            <Field imgSrc={introduction_icon} text="卡券说明" customClass="coupon-detail-field" />
+                                        </DetailItem>
+                                    </WingBlank>
                                     <WhiteSpace size="xs" />
-                                    <DetailItem detailItems={introductionItems}>
-                                        <Field imgSrc={introduction_icon} text="卡券说明" customClass="coupon-detail-field" />
-                                    </DetailItem>
-                                </WingBlank>
-                                <WhiteSpace size="xs" />
-                                <StationContent stationItems={stationItems} fieldName="适用油站" customClass="coupon-detail-station-content">
-                                </StationContent>
+                                    <StationContent stationItems={stationItems} fieldName="适用油站" customClass="coupon-detail-station-content">
+                                    </StationContent>
+                                </div>
                             </div>
-                        </div>
-                    </WingBlank>
+                        </WingBlank>
+                    </div>
                 </div>
-            </div>
+            </QueueAnim>
         )
     }
 }

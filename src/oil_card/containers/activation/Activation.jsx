@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { WingBlank, WhiteSpace, Toast } from 'antd-mobile';
 import {connect} from 'react-redux';
+import QueueAnim from 'rc-queue-anim';
 
 import MobileButton from '@/common/components/mobile_button/MobileButton';
 import Field from '@/common/components/field/Field';
@@ -129,25 +130,27 @@ class Activation extends Component {
         const {MerchantInfo} = this.props;
 
         return (
-            <WingBlank size="md">
-                <div className="activation-container">
-                    <div className="field-box">
-                        <Field imgSrc={select_oil_card} text="卡" customClass="define-field-class">
-                            <div>请选择</div>
-                        </Field>
+            <QueueAnim style={{height:'100%'}} type={['right', 'left']} delay={200} duration={1500} leaveReverse={true} forcedReplay={true}>
+                <WingBlank size="md" key="activation">
+                    <div className="activation-container">
+                        <div className="field-box">
+                            <Field imgSrc={select_oil_card} text="卡" customClass="define-field-class">
+                                <div>请选择</div>
+                            </Field>
+                        </div>
+                        <WhiteSpace size="sm" />
+                        {
+                            newCardData.map((oilCardData, index) => {
+                                return (
+                                    <OilCardActivation key={index} oilStation={MerchantInfo.name} oilCardData={oilCardData} handleChange={this.handleChange} />
+                                )
+                            })
+                        }
+                        <WhiteSpace size="xs" />
+                        <MobileButton buttonClass="longButton" text="立即激活" handleClick={this.activate} />
                     </div>
-                    <WhiteSpace size="sm" />
-                    {
-                        newCardData.map((oilCardData, index) => {
-                            return (
-                                <OilCardActivation key={index} oilStation={MerchantInfo.name} oilCardData={oilCardData} handleChange={this.handleChange} />
-                            )
-                        })
-                    }
-                    <WhiteSpace size="xs" />
-                    <MobileButton buttonClass="longButton" text="立即激活" handleClick={this.activate} />
-                </div>
-            </WingBlank>
+                </WingBlank>
+            </QueueAnim>
         );
     }
 }

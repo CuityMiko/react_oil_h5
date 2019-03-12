@@ -3,6 +3,7 @@ import { WingBlank, WhiteSpace, List, InputItem, Flex, Radio, Modal, Toast } fro
 import { createForm } from 'rc-form';
 import {connect} from 'react-redux';
 import moment from 'moment';
+import QueueAnim from 'rc-queue-anim';
 
 import MobileButton from '@/common/components/mobile_button/MobileButton';
 import Field from '@/common/components/field/Field';
@@ -176,7 +177,7 @@ class CToB extends Component {
             if (res != null) {
                 if (res.isMember) { // 会员
                     this.cards = res.cards;
-                    this.setState({isMember: res.isMember, cards: res.cards, coupons: this.bindCouponData(res.coupons), 
+                    this.setState({isMember: res.isMember, cards: res.cards, coupons: this.bindCouponData(res.coupons),
                         payAuthCode: res.payAuthCode,
                         qrcodeId: this.props.query.qrcodeId,
                         staffId: this.props.query.staffId,
@@ -188,7 +189,7 @@ class CToB extends Component {
                         this.mbrCoupons = this.bindCouponData(res.coupons);
                     })
                 } else { // 非会员
-                    this.setState({isMember: res.isMember, cards: [], coupons: [], 
+                    this.setState({isMember: res.isMember, cards: [], coupons: [],
                         payAuthCode: res.payAuthCode,
                         qrcodeId: this.props.query.qrcodeId,
                         staffId: this.props.query.staffId,
@@ -205,7 +206,7 @@ class CToB extends Component {
             if (err.indexOf('used') > -1) {
                 Toast.fail('请重新扫码支付！', 2);
             }
-        }) 
+        })
     }
 
     /**
@@ -247,8 +248,9 @@ class CToB extends Component {
                     actTimeStart: item.useTimeBegin,
                     actTimeEnd: item.useTimeEnd,
                     couponNumber: item.couponNumber,
-                    skus: item.gasMbrProSkuDTOS.map(s=>s.id),
+                    skus: item.gasMbrProSkuDTOS != null ? item.gasMbrProSkuDTOS.map(s=>s.id) : [],
                     payLimit: item.payLimit != null ? item.payLimit.split(',') : [],
+                    getTime: item.getTime
                 }
                 // 支付方式
                 if (item.payLimit) {
@@ -258,7 +260,7 @@ class CToB extends Component {
                 if(item.dateType == 0) {
                     _ritem.date = `${moment(item.useTimeBegin).format('MM.DD')} - ${moment(item.useTimeEnd).format('MM.DD')}`;
                 } else if(item.dateType == 1) {
-                    _ritem.date = `${moment().format('MM.DD')} - ${moment().add(item.fixedTerm - 1, 'days').format('MM.DD')}`;
+                    _ritem.date = `${moment(item.getTime).format('MM.DD')} - ${moment().add(item.fixedTerm - 1, 'days').format('MM.DD')}`;
                 }
                 result.push(_ritem)
             })
@@ -389,7 +391,7 @@ class CToB extends Component {
     bindMaxCoupon = (coupons) => {
         try {
             if (coupons && coupons.length > 0) {
-                let _tempcoupons = coupons.sort((x, y) => y.amount - x.amount); 
+                let _tempcoupons = coupons.sort((x, y) => y.amount - x.amount);
                 let _maxcoupon = _tempcoupons[0];
                 this.setState({
                     couponcode: _maxcoupon.code,
@@ -429,7 +431,7 @@ class CToB extends Component {
     bindSkus = (merchantid) => {
         PaymentService.GetSkuData(merchantid).then(res => {
             if (res != null && res.length > 0) {
-                let oildata = res.map(c => ({id: c.id, name: c.name, 
+                let oildata = res.map(c => ({id: c.id, name: c.name,
                     price: c.price || 0, // 原价
                     mbrPrice: c.mbrPrice, // 会员优惠价
                     nonMbrPrice: c.nonMbrPrice, // 非会员优惠价
@@ -455,7 +457,11 @@ class CToB extends Component {
                     _tempskus.push(_tempsku);
                 }
             })
-            this.setState({oilPros: _tempskus})
+            if (_tempskus.length > 0) {
+              this.setState({oilPros: _tempskus})
+            } else {
+              Toast.info('暂无可用油品', 2);
+            }
         }
     }
 
@@ -634,12 +640,12 @@ class CToB extends Component {
             couponcode, mbrCardId, merchantid, payAuthCode, qrcodeId, staffId, userId, isMember, couponPayLimit} = this.state;
         // 金额必输
         if (amount == '') {
-            Toast.fail('请输入金额!', 1);
+            Toast.fail('请输入金额', 1);
             return;
         }
         // 油品必选
         if (selSkuId == 0) {
-            Toast.fail('请选择油品!', 1);
+            Toast.fail('请选择油品', 1);
             return;
         }
         // 优惠券支付方式限制
@@ -656,7 +662,7 @@ class CToB extends Component {
             }
         }
         // 非微信支付，需判断卡片余额
-        if (payType != 0) { 
+        if (payType != 0) {
             if (payAmount > cardAvailableAmount) {
                 this.showModal('accountModal');
                 return;
@@ -671,12 +677,12 @@ class CToB extends Component {
             }
         }
         // 不使用微信支付
-        if (amount !=  '' && payAmount <= 0 && payType == 0) { 
-            Toast.fail('请选择支付方式!', 1);
+        if (amount !=  '' && payAmount <= 0 && payType == 0) {
+            Toast.fail('请选择支付方式', 1);
             return;
         }
         // 获取会员ID
-        let mbrId = 0;
+        let mbrId = null;
         const {MemberInfo} = this.props;
         if (MemberInfo) {
             mbrId = MemberInfo.id;
@@ -738,198 +744,200 @@ class CToB extends Component {
             selSkucardSpecId // 选中SKU对应的卡种ID
         } = this.state;
         return (
-            <div className="grey-back c-to-b-container">
-                <WhiteSpace size="xs" />
-                <WingBlank size="sm">
-                    <div className="header">
-                        <WingBlank size="sm">
-                            <WhiteSpace size="xs" />
-                            {/*数字键盘*/}
-                            <List>
-                                <InputItem
-                                    {...getFieldProps('money3')}
-                                    type="money"
-                                    placeholder="请输入金额"
-                                    clear
-                                    value={amount}
-                                    moneyKeyboardAlign="left"
-                                    onChange={this.amountChange}
-                                    moneyKeyboardWrapProps={moneyKeyboardWrapProps}
-                                >¥</InputItem>
-                            </List>
-                            <Field text="油品选择" imgSrc={select_oil} customClass="select-oil-field">
-                                <div className="right">
-                                    <div>滑动可选择不同油品</div>
-                                    <img src={slide_icon} alt="" />
-                                </div>
-                            </Field>
-                        </WingBlank>
-                        {/*油品选择动画*/}
-                        <div className="oil-pro-box">
-                            <Flex>
-                                {
-                                    oilPros.map((item, index) => {
-                                        return (
-                                            <div className={index === oilProCheckedIndex?'oil-pro oil-pro-checked':'oil-pro'}
-                                                 key={index}
-                                                 onClick={() => this.oilProClick(index, item)}
-                                            >{item.name.length>3?(item.name.substr(0,3).concat('...')):item.name}</div>
-                                        )
-                                    })
-                                }
-                            </Flex>
-                        </div>
-                        <WingBlank size="sm">
-                            {/*油品单价*/}
-                            <div className="oil-price-box">
+            <QueueAnim style={{height:'100%'}} type={['right', 'left']} delay={200} duration={1500} leaveReverse={true} forcedReplay={true}>
+                <div className="grey-back c-to-b-container" key="ctob">
+                    <WhiteSpace size="xs" />
+                    <WingBlank size="sm">
+                        <div className="header">
+                            <WingBlank size="sm">
+                                <WhiteSpace size="xs" />
+                                {/*数字键盘*/}
+                                <List>
+                                    <InputItem
+                                        {...getFieldProps('money3')}
+                                        type="money"
+                                        placeholder="请输入金额"
+                                        clear
+                                        value={amount}
+                                        moneyKeyboardAlign="left"
+                                        onChange={this.amountChange}
+                                        moneyKeyboardWrapProps={moneyKeyboardWrapProps}
+                                    >¥</InputItem>
+                                </List>
+                                <Field text="油品选择" imgSrc={select_oil} customClass="select-oil-field">
+                                    <div className="right">
+                                        <div>滑动可选择不同油品</div>
+                                        <img src={slide_icon} alt="" />
+                                    </div>
+                                </Field>
+                            </WingBlank>
+                            {/*油品选择动画*/}
+                            <div className="oil-pro-box">
                                 <Flex>
                                     {
-                                        price > 0 ? (
-                                            <Flex.Item>
-                                                <Field text="油品单价" customClass="oil-price-field">
-                                                    <div>¥{price}/L</div>
-                                                </Field>
-                                            </Flex.Item>
-                                        ) : null
-                                    }
-                                    {
-                                        isMember && mbrPrice != null ? (
-                                            <Flex.Item>
-                                                <Field text="优惠后" customClass="oil-price-field discount-price-field">
-                                                    <div className="oil-price-field-right">
-                                                        <img src={discount_price_icon} alt="" />
-                                                        <div>¥{mbrPrice}/L</div>
-                                                    </div>
-                                                </Field>
-                                            </Flex.Item>
-                                        ) : null
-                                    }
-                                    {
-                                        !isMember && nonMbrPrice != null ? (
-                                            <Flex.Item>
-                                                <Field text="优惠后" customClass="oil-price-field discount-price-field">
-                                                    <div className="oil-price-field-right">
-                                                        <img src={discount_price_icon} alt="" />
-                                                        <div>¥{nonMbrPrice}/L</div>
-                                                    </div>
-                                                </Field>
-                                            </Flex.Item>
-                                        ) : null
+                                        oilPros.map((item, index) => {
+                                            return (
+                                                <div className={index === oilProCheckedIndex?'oil-pro oil-pro-checked':'oil-pro'}
+                                                    key={index}
+                                                    onClick={() => this.oilProClick(index, item)}
+                                                >{item.name.length>3?(item.name.substr(0,3).concat('...')):item.name}</div>
+                                            )
+                                        })
                                     }
                                 </Flex>
                             </div>
-                            <List>
-                                {
-                                    this.props.query.couponnum == undefined ? (
-                                        coupons.length > 0 ? (
-                                            <Item
-                                                arrow="horizontal"
-                                                thumb={coupon_icon}
-                                                extra={currentCouponAmount > 0 ? `-¥${currentCouponAmount}` : '选择优惠券'}
-                                                onClick={this.selectCoupon}
-                                            >&nbsp;</Item>
+                            <WingBlank size="sm">
+                                {/*油品单价*/}
+                                <div className="oil-price-box">
+                                    <Flex>
+                                        {
+                                            price > 0 ? (
+                                                <Flex.Item>
+                                                    <Field text="油品单价" customClass="oil-price-field">
+                                                        <div>¥{price}/L</div>
+                                                    </Field>
+                                                </Flex.Item>
+                                            ) : null
+                                        }
+                                        {
+                                            isMember && mbrPrice != null ? (
+                                                <Flex.Item>
+                                                    <Field text="优惠后" customClass="oil-price-field discount-price-field">
+                                                        <div className="oil-price-field-right">
+                                                            <img src={discount_price_icon} alt="" />
+                                                            <div>¥{mbrPrice}/L</div>
+                                                        </div>
+                                                    </Field>
+                                                </Flex.Item>
+                                            ) : null
+                                        }
+                                        {
+                                            !isMember && nonMbrPrice != null ? (
+                                                <Flex.Item>
+                                                    <Field text="优惠后" customClass="oil-price-field discount-price-field">
+                                                        <div className="oil-price-field-right">
+                                                            <img src={discount_price_icon} alt="" />
+                                                            <div>¥{nonMbrPrice}/L</div>
+                                                        </div>
+                                                    </Field>
+                                                </Flex.Item>
+                                            ) : null
+                                        }
+                                    </Flex>
+                                </div>
+                                <List>
+                                    {
+                                        this.props.query.couponnum == undefined ? (
+                                            coupons.length > 0 ? (
+                                                <Item
+                                                    arrow="horizontal"
+                                                    thumb={coupon_icon}
+                                                    extra={currentCouponAmount > 0 ? `-¥${currentCouponAmount}` : '选择优惠券'}
+                                                    onClick={this.selectCoupon}
+                                                >&nbsp;</Item>
+                                            ) : (
+                                                <Item
+                                                    thumb={coupon_icon}
+                                                    extra='暂无可用卡券'
+                                                >&nbsp;</Item>
+                                            )
                                         ) : (
                                             <Item
                                                 thumb={coupon_icon}
-                                                extra='暂无可用卡券'
+                                                extra={`-¥${currentCouponAmount}`}
                                             >&nbsp;</Item>
                                         )
-                                    ) : (
-                                        <Item
-                                            thumb={coupon_icon}
-                                            extra={`-¥${currentCouponAmount}`}
-                                        >&nbsp;</Item>
+                                    }
+                                    {
+                                        actAmount > 0 ? (<Item style={{marginRight: 6}} extra={`-¥${actAmount}`}>活动优惠</Item>) : null
+                                    }
+                                </List>
+                                <Modal
+                                    popup
+                                    visible={selectCouponModal}
+                                    onClose={() => this.onClose('selectCouponModal')}
+                                    animationType="slide-up"
+                                >
+                                    <SelectCouponPopup payAmount={Number(payAmount)} code={couponcode} isReset={couponReset} couponData={coupons} getCouponClick={this.getCouponClick} />
+                                </Modal>
+                            </WingBlank>
+                        </div>
+                    </WingBlank>
+                    <WhiteSpace size="xs" />
+                    {/*选择付款方式*/}
+                    <WingBlank size="sm">
+                        <div className="middle">
+                            <WingBlank size="sm">
+                                <Field text="选择付款方式" customClass="select-pay-field">
+                                    {
+                                        recommendruleinfo == '' ? null : (
+                                            <div className="select-pay-right">
+                                                <img src={pay_gift} alt="" />
+                                                <div onClick={() => this.goRecharge()}>{recommendruleinfo.length>15?(recommendruleinfo.substr(0, 15).concat('...')):recommendruleinfo}</div>
+                                            </div>
+                                        )
+                                    }
+                                </Field>
+                                {
+                                    amount !=  '' && payAmount <= 0 ? null : (
+                                        <Field text="微信支付" imgSrc={wechat} customClass="pay-field">
+                                            <RadioItem key={0} checked={payType === 0} onChange={() => this.onPayTypeChange(0)} />
+                                        </Field>
                                     )
                                 }
                                 {
-                                    actAmount > 0 ? (<Item style={{marginRight: 25}} extra={`-¥${actAmount}`}>活动优惠总额</Item>) : null
-                                }
-                            </List>
-                            <Modal
-                                popup
-                                visible={selectCouponModal}
-                                onClose={() => this.onClose('selectCouponModal')}
-                                animationType="slide-up"
-                            >
-                                <SelectCouponPopup payAmount={Number(payAmount)} code={couponcode} isReset={couponReset} couponData={coupons} getCouponClick={this.getCouponClick} />
-                            </Modal>
-                        </WingBlank>
-                    </div>
-                </WingBlank>
-                <WhiteSpace size="xs" />
-                {/*选择付款方式*/}
-                <WingBlank size="sm">
-                    <div className="middle">
-                        <WingBlank size="sm">
-                            <Field text="选择付款方式" customClass="select-pay-field">
-                                {
-                                    recommendruleinfo == '' ? null : (
-                                        <div className="select-pay-right">
-                                            <img src={pay_gift} alt="" />
-                                            <div onClick={() => this.goRecharge()}>{recommendruleinfo.length>15?(recommendruleinfo.substr(0, 15).concat('...')):recommendruleinfo}</div>
+                                    isMember ? (
+                                        cards.length > 0 ? (
+                                            cards.map((card, index) => {
+                                                return (
+                                                    <Field key={index} text={card.specId == 1 ? '汽油卡' : '柴油卡'} imgSrc={card.specId == 1 ? petrol_trade : gasoline_trade} subtext={`（剩余：¥${card.availableAmount}）`} customClass="pay-field">
+                                                        <RadioItem key={card.specId} checked={payType === card.specId} onChange={() => this.onPayTypeChange(card.specId)}/>
+                                                    </Field>
+                                                )
+                                            })
+                                        ) : null
+                                    ) : (
+                                        <div>
+                                            <Field text="汽油卡" imgSrc={petrol_trade} subtext="（非会员不可使用）" customClass="pay-field">
+                                                <RadioItem disabled/>
+                                            </Field>
+                                            <Field text="柴油卡" imgSrc={gasoline_trade} subtext="（非会员不可使用）" customClass="pay-field">
+                                                <RadioItem disabled/>
+                                            </Field>
                                         </div>
                                     )
                                 }
-                            </Field>
-                            {
-                                amount !=  '' && payAmount <= 0 ? null : (
-                                    <Field text="微信支付" imgSrc={wechat} customClass="pay-field">
-                                        <RadioItem key={0} checked={payType === 0} onChange={() => this.onPayTypeChange(0)} />
-                                    </Field>
-                                )
-                            }
-                            {
-                                isMember ? (
-                                    cards.length > 0 ? (
-                                        cards.map((card, index) => {
-                                            return (
-                                                <Field key={index} text={card.specId == 1 ? '汽油卡' : '柴油卡'} imgSrc={card.specId == 1 ? petrol_trade : gasoline_trade} subtext={`（剩余：¥${card.availableAmount}）`} customClass="pay-field">
-                                                    <RadioItem key={card.specId} checked={payType === card.specId} onChange={() => this.onPayTypeChange(card.specId)}/>
-                                                </Field>
-                                            )
-                                        })
-                                    ) : null
-                                ) : (
-                                    <div>
-                                        <Field text="汽油卡" imgSrc={petrol_trade} subtext="（非会员不可使用）" customClass="pay-field">
-                                            <RadioItem disabled/>
-                                        </Field>
-                                        <Field text="柴油卡" imgSrc={gasoline_trade} subtext="（非会员不可使用）" customClass="pay-field">
-                                            <RadioItem disabled/>
-                                        </Field>
-                                    </div>
-                                )
-                            }
-                        </WingBlank>
-                    </div>
-                </WingBlank>
-                <WhiteSpace size="lg" />
-                <WingBlank size="sm">
-                    <MobileButton text={`付款（¥${payAmount}）`} customClass="c-to-b-button" buttonClass="longButton" handleClick={this.toPay} />
-                    <Modal
-                        transparent
-                        visible={accountModal}
-                        onClose={() => this.onClose('accountModal')}
-                        animationType="slide-up"
-                    >
-                        <AccountModal
-                            payAmount={parseFloat(payAmount).toFixed(2)}
-                            availableAmount={parseFloat(cardAvailableAmount).toFixed(2)}
-                            handleClick={() => {this.goRecharge(1)}}
-                            onClose={() => this.onClose('accountModal')} />
-                    </Modal>
-                </WingBlank>
-                {
-                    isMember ? null : (
-                        <div>
-                            <WhiteSpace size="xs" />
-                            <WingBlank size="sm">
-                                <MobileButton text="加入会员" customClass="c-to-b-button" buttonClass="emptyButton" handleClick={this.toMember} />
                             </WingBlank>
                         </div>
-                    )
-                }
-            </div>
+                    </WingBlank>
+                    <WhiteSpace size="lg" />
+                    <WingBlank size="sm">
+                        <MobileButton text={`付款（¥${payAmount}）`} customClass="c-to-b-button" buttonClass="longButton" handleClick={this.toPay} />
+                        <Modal
+                            transparent
+                            visible={accountModal}
+                            onClose={() => this.onClose('accountModal')}
+                            animationType="slide-up"
+                        >
+                            <AccountModal
+                                payAmount={parseFloat(payAmount).toFixed(2)}
+                                availableAmount={parseFloat(cardAvailableAmount).toFixed(2)}
+                                handleClick={() => {this.goRecharge(1)}}
+                                onClose={() => this.onClose('accountModal')} />
+                        </Modal>
+                    </WingBlank>
+                    {
+                        isMember ? null : (
+                            <div>
+                                <WhiteSpace size="xs" />
+                                <WingBlank size="sm">
+                                    <MobileButton text="加入会员" customClass="c-to-b-button" buttonClass="emptyButton" handleClick={this.toMember} />
+                                </WingBlank>
+                            </div>
+                        )
+                    }
+                </div>
+            </QueueAnim>
         )
     }
 }

@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { 
     WhiteSpace, WingBlank, Toast, Icon, ActivityIndicator, Modal
 } from 'antd-mobile';
+import QueueAnim from 'rc-queue-anim';
 
 import Card from '@/common/components/card/Card';
 import Field from '@/common/components/field/Field';
@@ -211,26 +212,29 @@ class Login extends React.Component {
     bindInitPage = () => {
         const {entryRequest, issuccess} = this.state;
         if (entryRequest) {
-            return (<ActivityIndicator size="large" animating={entryRequest} toast text="正在加载中....." />);
+            // return (<ActivityIndicator size="large" animating={entryRequest} toast text="正在加载中....." />);
+            return null;
         } else {
             if (issuccess) {
                 const {history} = this.props;
                 return (
-                    <div className="login-container">
-                        <WhiteSpace size="sm" />
-                        <WingBlank size="md">
-                            {this.bindCard()}
-                            <Field imgSrc={quanyi_img} text="权益" customClass="field-class">
-                                <MobileButton text="查看会员卡详情"
-                                              customClass="button-class"
-                                              icon={<Icon type="right" size="xs" />}
-                                              handleClick={this.seaQuanyi}
-                                />
-                            </Field>
-                            <LoginForm title="立 即 领 取" history={history} />
-                            <div className="service-agreement" onClick={this.seaAgreement}>登录即同意<span>《会员服务协议》</span></div>
-                        </WingBlank>
-                    </div>
+                    <QueueAnim style={{height:'100%'}} type={['right', 'left']} delay={200} duration={1500} leaveReverse={true} forcedReplay={true}>
+                        <div className="login-container" key="login">
+                            <WhiteSpace size="sm" />
+                            <WingBlank size="md">
+                                {this.bindCard()}
+                                <Field imgSrc={quanyi_img} text="权益" customClass="field-class">
+                                    <MobileButton text="查看会员卡详情"
+                                                customClass="button-class"
+                                                icon={<Icon type="right" size="xs" />}
+                                                handleClick={this.seaQuanyi}
+                                    />
+                                </Field>
+                                <LoginForm title="立 即 领 取" history={history} />
+                                <div className="service-agreement" onClick={this.seaAgreement}>登录即同意<span>《会员服务协议》</span></div>
+                            </WingBlank>
+                        </div>
+                    </QueueAnim>
                 )
             } else {
                 return (

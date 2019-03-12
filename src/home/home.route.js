@@ -3,15 +3,16 @@
  */
 import Loadable from 'react-loadable';
 import {Loading} from '@/common/components/widget';
+import Home from './index';
 
 /**
  * 模块
  */
 
-const Home = Loadable({ 
-    loader: () => import('./index.jsx'),
-    loading: Loading
-})
+// const Home = Loadable({ 
+//     loader: () => import('./index.jsx'),
+//     loading: Loading
+// })
 
 // 路由配置
 const routes = [

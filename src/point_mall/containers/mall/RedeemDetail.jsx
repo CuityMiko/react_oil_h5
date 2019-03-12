@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { WhiteSpace, WingBlank } from 'antd-mobile';
 import moment from 'moment';
 import {connect} from 'react-redux';
+import QueueAnim from 'rc-queue-anim';
 
 import Field from '@/common/components/field/Field';
 import DetailBanner from '@/point_mall/containers/mall/components/detail_banner/DetailBanner';
@@ -166,22 +167,24 @@ class RedeemDetail extends Component {
         const stationItems = this.GetStation();
         if (goodsdetail != null) {
             return (
-                <div className="animated fadeIn grey-back mall-detail-container">
-                    <DetailBanner img={goodsdetail.goodsImg || default_bg} name= {goodsdetail.goodsName}>
-                    </DetailBanner>
-                    {this.GetCode()}
-                    <WhiteSpace size="xs" />
-                    <div className="detail-content">
-                        <WingBlank size="sm">
-                            <DetailItem detailItems={infoItems}>
-                                <Field imgSrc={info_icon} text="兑换说明" customClass="mall-detail-field" />
-                            </DetailItem>
-                        </WingBlank>
+                <QueueAnim style={{height:'100%'}} type={['right', 'left']} delay={200} duration={1500} leaveReverse={true} forcedReplay={true}>
+                    <div className="animated fadeIn grey-back mall-detail-container" key="RedeemDetail">
+                        <DetailBanner img={goodsdetail.goodsImg || default_bg} name= {goodsdetail.goodsName}>
+                        </DetailBanner>
+                        {this.GetCode()}
+                        <WhiteSpace size="xs" />
+                        <div className="detail-content">
+                            <WingBlank size="sm">
+                                <DetailItem detailItems={infoItems}>
+                                    <Field imgSrc={info_icon} text="兑换说明" customClass="mall-detail-field" />
+                                </DetailItem>
+                            </WingBlank>
+                        </div>
+                        <WhiteSpace size="xs" />
+                        <StationContent stationItems={stationItems} fieldName="兑换油站" customClass="mall-detail-station-content">
+                        </StationContent>
                     </div>
-                    <WhiteSpace size="xs" />
-                    <StationContent stationItems={stationItems} fieldName="兑换油站" customClass="mall-detail-station-content">
-                    </StationContent>
-                </div>
+                </QueueAnim>
             )
         } else {
             return <div></div>

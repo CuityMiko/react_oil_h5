@@ -3,6 +3,7 @@ import { WingBlank, WhiteSpace } from 'antd-mobile';
 import {connect} from 'react-redux';
 import moment from 'moment';
 import * as QrCode from 'qrcode.react';
+import QueueAnim from 'rc-queue-anim';
 
 import Field from '@/common/components/field/Field';
 import CouponComponent from "@/common/components/coupon_component/CouponComponent";
@@ -11,6 +12,7 @@ import pay_success from '@/payment/assets/images/pay_success.png';
 import get_icon from '@/payment/assets/images/get_icon.png';
 import PaymentService from '@/payment/services/payment.services';
 import {GetMemberInfoAction} from '@/base/redux/actions';
+import wxcodeImg from '@/payment/assets/images/wxcode.png';
 
 import './pay_success.less';
 
@@ -21,7 +23,8 @@ class PaySuccess extends Component {
         orderAmount: 0, // 订单金额
         payAmount: 0, // 支付金额
         discountAmount: 0, // 优惠金额
-        merchantWXUrl: '' // 商家微信公众号链接
+        merchantWXUrl: '', // 商家微信公众号链接
+        couponResult: null // 获取优惠券结果
     };
 
     componentWillMount() {
@@ -71,25 +74,30 @@ class PaySuccess extends Component {
      */
     bindCoupon = (orderNumber) => {
         PaymentService.GetAfterPayCoupon(orderNumber).then(res => {
-            if (res != null && res.coupon) {
-                let couponItem = {
-                    cnum: res.coupon.couponNumber,
-                    amount: res.coupon.amount,
-                    leastCost: res.coupon.leastCost,
-                    name: res.coupon.name,
-                    applyGoods: res.coupon.skuName,
-                    availInventory: 0, //可用库存
-                    actTimeStart: res.coupon.actTimeStart,
-                    actTimeEnd: res.coupon.actTimeEnd,
-                    date: ''
+            if (res != null) {
+                const couponResult = {...res};
+                let couponItem = null;
+                if (couponResult && couponResult.giftCoupon) {
+                    couponItem = {
+                        cnum: couponResult.giftCoupon.couponNumber,
+                        amount: couponResult.giftCoupon.amount,
+                        leastCost: couponResult.giftCoupon.leastCost,
+                        name: couponResult.giftCoupon.name,
+                        applyGoods: '-',
+                        availInventory: couponResult.giftCoupon.availInventory, //可用库存
+                        date: '-'
+                    }
+                    if (couponResult.giftCoupon.skus && couponResult.giftCoupon.skus.length > 0) {
+                        couponItem.applyGoods = couponResult.giftCoupon.skus.filter(s=>s.skuName!=null).map(s=>s.skuName).join('/');
+                    }
+                    // dateType 卡券使用有效期类型 0-固定时间 1-立即生效
+                    if(couponResult.giftCoupon.dateType == 0) {
+                        couponItem.date = `${moment(couponResult.giftCoupon.actTimeStart).format('MM.DD')} - ${moment(couponResult.giftCoupon.actTimeEnd).format('MM.DD')}`;
+                    } else if(couponResult.giftCoupon.dateType == 1) {
+                        couponItem.date = `领取后${couponResult.giftCoupon.fixedTerm}天内有效`;
+                    }
                 }
-                // dateType 卡券使用有效期类型 0-固定时间 1-立即生效
-                if(res.coupon.dateType == 0) {
-                    couponItem.date = `${moment(res.coupon.actTimeStart).format('MM.DD')} - ${moment(res.coupon.actTimeEnd).format('MM.DD')}`;
-                } else if(res.coupon.dateType == 1) {
-                    couponItem.date = `${moment().format('MM.DD')} - ${moment().add(res.coupon.fixedTerm - 1, 'days').format('MM.DD')}`;
-                }
-                this.setState({couponItem})
+                this.setState({couponItem, couponResult})
             }
         })
     }
@@ -98,14 +106,17 @@ class PaySuccess extends Component {
      * 非会员先注册然后再登录
      */
     goToLogin = (url) => {
-        this.props.history.push(url);
+        window.location.href = url;
     }
 
     // 判断下方是送会员还是送卡券，目前只存在这两种情况，后期有需要可进行扩展
     judge = () => {
-        const {isMember, couponItem} = this.state;
+        const {isMember, couponItem, couponResult} = this.state;
         const {MerchantInfo} = this.props;
-        if (couponItem != null) {
+        if (couponResult == null) {
+            return null;
+        }
+        if (couponItem != null && couponResult.giftType == 1) { // couponResult.giftType赠送类型;-1:无赠送内容 0：会员卡 1:优惠券
             return (
                 <div className="gift-coupon">
                     <div className="gift-coupon-title">恭喜！老板送您1张优惠券</div>
@@ -115,9 +126,9 @@ class PaySuccess extends Component {
                 </div>
             )
         } else {
-            if (!isMember) { // 非会员
+            if (couponResult.giftType == 0) {
                 return (
-                    <div className="gift-member" onClick={() => {this.goToLogin(`/app/login/${MerchantInfo.id || 0}`)}} >
+                    <div className="gift-member" onClick={() => {this.goToLogin(couponResult.mbrIndexUrl)}} >
                         <div className="box">
                             <div className="station-name">{MerchantInfo ? MerchantInfo.name : ''}</div>
                             <img className="get-icon" src={get_icon} alt=""/>
@@ -161,44 +172,43 @@ class PaySuccess extends Component {
     render() {
         const {orderAmount, payAmount, discountAmount, isMember, merchantWXUrl, imgurl} = this.state;
         return (
-            <div className="pay-success-container">
-                <div className="header">
-                    <img className="icon" src={pay_success} alt="" />
-                    <div className="title">付款成功</div>
-                    <div className="amount">¥{payAmount}</div>
-                </div>
-                <WingBlank size="sm">
-                    <Field text="消费金额" customClass="field-class">
-                        <span>¥{orderAmount}</span>
-                    </Field>
-                    <Field text="优惠金额" customClass="field-class">
-                        <span>¥{discountAmount}</span>
-                    </Field>
-                    <div className="line"></div>
-                    {this.judge()}
-                    <WhiteSpace size="lg"/>
-                    <WingBlank size="md">
-                        <MobileButton text="回到首页" handleClick={this.goHome} buttonClass="longButton" />
-                    </WingBlank>
-                    <WhiteSpace size="lg"/>
-                    {
-                        merchantWXUrl != '' && merchantWXUrl != null ? <WingBlank size="md">
+            <QueueAnim style={{height:'100%'}} type={['right', 'left']} delay={200} duration={1500} leaveReverse={true} forcedReplay={true}>
+                <div className="pay-success-container" key="pay-success">
+                    <div className="header">
+                        <img className="icon" src={pay_success} alt="" />
+                        <div className="title">付款成功</div>
+                        <div className="amount">¥{payAmount}</div>
+                    </div>
+                    <WingBlank size="sm">
+                        <Field text="消费金额" customClass="field-class">
+                            <span>¥{orderAmount}</span>
+                        </Field>
+                        <Field text="优惠金额" customClass="field-class">
+                            <span>¥{discountAmount}</span>
+                        </Field>
+                        <div className="line"></div>
+                        {this.judge()}
+                        <WhiteSpace size="sm"/>
+                        {
+                            merchantWXUrl != '' && merchantWXUrl != null ?
                             <div style={{'textAlign': 'center'}}>
                                 <QrCode value={merchantWXUrl} size={120} id="wxcode" style={{display: 'none'}}/>
                                 {
-                                    imgurl ? <div>
-                                        <span style={{fontSize: 15}}>长按下方二维码关注商家微信公众号</span>
-                                        <WhiteSpace size="sm" />
-                                        <img src={imgurl} style={{width: 150, height: 150}}/>
-                                        <WhiteSpace size="sm" />
+                                    imgurl ? <div className="wxcodediv">
+                                        <img className="wxcode" src={imgurl}/>
+                                        <img className="wxcodeinfo" src={wxcodeImg} />
                                     </div>: null
                                 }
-                            </div>
-                        </WingBlank> : null
-                    }
-                    
-                </WingBlank>
-            </div>
+                            </div> : null
+                        }
+                        <WingBlank size="md">
+                            <WhiteSpace size="sm"/>
+                            <MobileButton text="回到首页" handleClick={this.goHome} buttonClass="longButton" />
+                            <WhiteSpace size="sm"/>
+                        </WingBlank>
+                    </WingBlank>
+                </div>
+            </QueueAnim>
         )
     }
 }

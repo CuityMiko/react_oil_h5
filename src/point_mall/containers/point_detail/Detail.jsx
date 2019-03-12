@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import moment from 'moment';
+import QueueAnim from 'rc-queue-anim';
 
 import StorePointDetail from "@/common/components/store_point_detail/StorePointDetail";
 import PointDetailService from '@/point_mall/services/point_detail/point_detail.service';
@@ -29,11 +30,10 @@ class PointDetailContent extends Component {
      * 绑定数据源
      */
     bindData = (result) => {
-        const {MemberInfo} = this.props;
         if (result != null) {
             let listItems = {
                 id: result.id,
-                mobile: MemberInfo && MemberInfo.mobile ? MemberInfo.mobile : '-',
+                mobile: result && result.mobile ? result.mobile : '-',
                 reason: result.remark || '-',
                 type: getPointType(result.type),
                 flag: result.type,
@@ -110,9 +110,11 @@ class PointDetailContent extends Component {
         } = this.props;
 
         return (
-            <div className="grey-back point-detail-container">
-                <StorePointDetail type="point" itemsMap={itemsMap} history={history} number={this.getNumber(listItems)}/>
-            </div>
+            <QueueAnim style={{height:'100%'}} type={['right', 'left']} delay={200} duration={1500} leaveReverse={true} forcedReplay={true}>
+                <div className="grey-back point-detail-container" key="point-detail">
+                    <StorePointDetail type="point" itemsMap={itemsMap} history={history} number={this.getNumber(listItems)}/>
+                </div>
+            </QueueAnim>
         );
     }
 }

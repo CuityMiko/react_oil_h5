@@ -48,15 +48,15 @@ class LeftCouponComponent extends Component {
                                 <div className="money">{amount}</div>
                             </div>
                             <div className="apply-conditions-box">
-                                <div className="apply-conditions">满¥{leastCost}可用</div>
+                                <div className="apply-conditions">{leastCost === 0 ? '任意金额': `满¥${leastCost}元`}可用</div>
                             </div>
                         </div>
                     </div>
                     <div className="left-right-content">
                         <div className="left-right-box">
-                            <div className="name">{name ? name.length>7?name.substring(0,7).concat('...'):name:''}</div>
+                            <div className="name">{name ? name.length > 7 ? name.substring(0,7).concat('...') : name : ''}</div>
                             <div className="item date">有效日期：{date}</div>
-                            <div className="item">适用油品：{applyGoods ? applyGoods.length>7?applyGoods.substring(0,7).concat('...'):applyGoods:''}</div>
+                            <div className="item date">适用油品：{applyGoods ? applyGoods.length > 7 ? applyGoods.substring(0,7).concat('...') : applyGoods : ''}</div>
                             {
                                 payType ? <div className="item">{payType}</div> : null
                             }

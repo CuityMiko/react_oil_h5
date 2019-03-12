@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { WingBlank } from 'antd-mobile';
 import {connect} from "react-redux";
+import QueueAnim from 'rc-queue-anim';
 
 import CouponComponent from "@/common/components/coupon_component/CouponComponent";
 import LoginForm from '@/common/components/login_form/LoginForm';
@@ -65,11 +66,16 @@ class ShareCoupon extends Component {
         }).then(res => {
             if (res != null) {
                 if (res.isMember) { // 会员
-                    history.push(`/app/coupon/detail/${couponNumber}`)
+                    history.push(`/app/coupon/detail/${couponNumber}`);
                 } else { // 非会员
-                    _this.tryLogin(code, merchantId);
+                    // _this.tryLogin(code, merchantId);
+                    sessionStorage.setItem('JumpRoute', `/app/coupon/detail/${couponNumber}`);
+                    window.location.href = `${window.location.origin}#/app/login/${merchantId}`;
                 }
             }
+        }).catch(err => {
+            sessionStorage.setItem('JumpRoute', `/app/coupon/detail/${couponNumber}`);
+            window.location.href = `${window.location.origin}#/app/login/${merchantId}`;
         })
     };
 
@@ -124,22 +130,24 @@ class ShareCoupon extends Component {
         const {couponItem} = this.state;
         const {MerchantInfo} = this.props;
         return (
-            <div className="share-coupon-container">
-                <div className="content">
-                    <div className="station-name-box">
-                        <img className="station-name-before" src={station_name_before} alt="" />
-                        <div className="station-name">{MerchantInfo && MerchantInfo.name ? MerchantInfo.name : ''}</div>
-                        <img className="station-name-after" src={station_name_after} alt="" />
-                    </div>
-                    <WingBlank size="md">
-                        <CouponComponent useScene="share-coupon" customClass="share-coupon-class" couponItem={couponItem} />
-                        <div className="form-box">
-                            <LoginForm useScene="share" title="登录领取到卡包" />
-                            <div className="go-member-center" onClick={this.goHome}>去会员中心</div>
+            <QueueAnim style={{height:'100%'}} type={['right', 'left']} delay={200} duration={1500} leaveReverse={true} forcedReplay={true}>
+                <div className="share-coupon-container" key="share-coupon">
+                    <div className="content">
+                        <div className="station-name-box">
+                            <img className="station-name-before" src={station_name_before} alt="" />
+                            <div className="station-name">{MerchantInfo && MerchantInfo.name ? MerchantInfo.name : ''}</div>
+                            <img className="station-name-after" src={station_name_after} alt="" />
                         </div>
-                    </WingBlank>
+                        <WingBlank size="md">
+                            <CouponComponent useScene="share-coupon" customClass="share-coupon-class" couponItem={couponItem} />
+                            <div className="form-box">
+                                <LoginForm useScene="share" title="登录领取到卡包" />
+                                <div className="go-member-center" onClick={this.goHome}>去会员中心</div>
+                            </div>
+                        </WingBlank>
+                    </div>
                 </div>
-            </div>
+            </QueueAnim>
         )
     }
 }

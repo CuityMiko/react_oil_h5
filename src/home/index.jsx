@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {WhiteSpace, WingBlank, NoticeBar} from 'antd-mobile';
 import {connect} from 'react-redux';
+import QueueAnim from 'rc-queue-anim';
 
 import MobileButton from '@/common/components/mobile_button/MobileButton';
 import Card from '@/common/components/card/Card';
@@ -267,30 +268,32 @@ class Home extends Component {
         const cardinfo = this.getCardInfo(MerchantInfo, cardObj);
 
         return (
-            <div className="animated fadeIn home-container">
-                {this.binNotice()}
-                <WhiteSpace size="sm" />
-                <WingBlank size="md">
-                    <Card
-                        cardObj={cardinfo}
-                        defineArea={this.defineArea()}
-                    />
-                    <WhiteSpace size="md" />
-                    <DataItem dataItems={dataItems} />
-                    <WhiteSpace size="lg" />
-                    <div className="button-box">
-                        <MobileButton
-                            text="快速充值"
-                            buttonClass="emptyButton"
-                            isRound={false}
-                            handleClick={this.goRecharge}
-                        />
-                        {this.bindRecommend(recommendRechargeRule)}
-                    </div>
+            <QueueAnim style={{height:'100%'}} type={['right', 'left']} delay={200} duration={1500} leaveReverse={true} forcedReplay={true}>
+                <div className="animated fadeIn home-container" key="home">
+                    {this.binNotice()}
                     <WhiteSpace size="sm" />
-                    <ModuleItem history={history} />
-                </WingBlank>
-            </div>
+                    <WingBlank size="md">
+                        <Card
+                            cardObj={cardinfo}
+                            defineArea={this.defineArea()}
+                        />
+                        <WhiteSpace size="md" />
+                        <DataItem dataItems={dataItems} />
+                        <WhiteSpace size="lg" />
+                        <div className="button-box">
+                            <MobileButton
+                                text="快速充值"
+                                buttonClass="emptyButton"
+                                isRound={false}
+                                handleClick={this.goRecharge}
+                            />
+                            {this.bindRecommend(recommendRechargeRule)}
+                        </div>
+                        <WhiteSpace size="sm" />
+                        <ModuleItem history={history} />
+                    </WingBlank>
+                </div>
+            </QueueAnim>
         )
     }
 }

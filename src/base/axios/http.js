@@ -4,14 +4,14 @@ import {Toast} from 'antd-mobile'
 
 // 创建axios实例
 const service = axios.create({
-  timeout: 50000 // 请求超时时间
+  timeout: 500000 // 请求超时时间
 })
 
 // request拦截器
 service.interceptors.request.use(config => {
   // config.url = config.url.replace('h5', 'consumer');
   if (config.headers.isLoading == undefined) {
-    Toast.loading('加载中...');
+    // Toast.loading('加载中...');
   }
   // 设置请求报文头
   if (localStorage.getItem('user-token')) {

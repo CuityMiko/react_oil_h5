@@ -25,7 +25,7 @@ const GetMallList = (pageindex, pagesize) => {
                 result.items.push({
                     id: item.id, 
                     name: item.name,
-                    money: item.price,
+                    money: Number(item.price).toFixed(2),
                     score: item.score,
                     imgUrl: item.imageUrls != null ? item.imageUrls[0] : ''
                 })

@@ -188,7 +188,7 @@ this.props.form.getFieldsValue()
 ##### eslint代码规范：
 - 1. https://www.imooc.com/article/20073
 
-##### 参数接收方式：
+##### 参数接收方式： 
 ```js
 // ?id=形式传参： 
 this.props.query.id

@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import QueueAnim from 'rc-queue-anim';
 
 import { receiveData, GetMerchantInfoAction, GetUserLoginInfoAction, GetMemberInfoAction } from '@/base/redux/actions';
 import Routers from '@/base/routes/router';
@@ -25,6 +24,42 @@ class App extends Component {
         }
         // 获取鼠标点击位置
         document.onmousemove = this.mousePosition;
+        // 禁止下拉
+        // this.bindTouchMove();
+    }
+
+    bindTouchMove = () => {
+        if (window.location.hash.indexOf('/app/payment') <= -1) {
+            document.querySelector('.scroll').addEventListener('touchstart', function() {
+                if (window.location.hash.indexOf('/app/payment') <= -1) {
+                    var top = document.querySelector('.scroll').scrollTop
+                    , totalScroll = document.querySelector('.scroll').scrollHeight
+                    , currentScroll = top + document.querySelector('.scroll').offsetHeight
+                    if(top === 0) {
+                        document.querySelector('.scroll').scrollTop = 1
+                    } else if(currentScroll === totalScroll) {
+                        document.querySelector('.scroll').scrollTop = top - 1
+                    }
+                }
+            })
+            try {
+                document.querySelector('.scroll').addEventListener('touchmove', function(evt) {
+                    if (window.location.hash.indexOf('/app/payment') <= -1) {
+                        if(document.querySelector('.scroll').offsetHeight < document.querySelector('.scroll').scrollHeight) {
+                            evt._isScroller = true
+                        }
+                    }
+                })
+                document.getElementsByTagName("body")[0].addEventListener("touchmove", function(e) {
+                    if (window.location.hash.indexOf('/app/payment') <= -1) {
+                        if(!e._isScroller) {
+                            e.preventDefault()
+                        }
+                    }
+                }, { passive: false });
+            } catch (error) {
+            }
+        }
     }
 
     // 获取鼠标点击位置
@@ -57,6 +92,11 @@ class App extends Component {
             if (merchantinfo_store) {
                 const merchantinfo_obj = JSON.parse(merchantinfo_store);
                 GetMerchantInfoAction(merchantinfo_obj.id);
+            } else {
+                const wxmerchantId = sessionStorage.getItem('wxmerchantId');
+                if (wxmerchantId) {
+                    GetMerchantInfoAction(parseInt(wxmerchantId));
+                }
             }
         }
     }
@@ -112,12 +152,8 @@ class App extends Component {
     render() {
         const { width, height } = this.state;
         return (
-            <div>
-                <QueueAnim type="left" delay={100}>
-                    <div style={{width, height}}>
-                        <Routers />
-                    </div>
-                </QueueAnim>
+            <div style={{width, height}} key="app">
+                <Routers history={this.props.history}/>
             </div>
         );
     }

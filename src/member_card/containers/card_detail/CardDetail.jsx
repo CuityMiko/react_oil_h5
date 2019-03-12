@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from "react-redux";
+import QueueAnim from 'rc-queue-anim';
 
 import PageDetail from '@/member_card/components/PageDetail';
 
@@ -28,7 +29,9 @@ class CardDetail extends Component {
         const { detailItems } = this.state;
 
         return (
-            <PageDetail data={detailItems} />
+            <QueueAnim style={{height:'100%'}} type={['right', 'left']} delay={200} duration={1500} leaveReverse={true} forcedReplay={true}>
+                <PageDetail data={detailItems} key="card_detail"/>
+            </QueueAnim>
         );
     }
 }

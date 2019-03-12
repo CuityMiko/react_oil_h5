@@ -24,7 +24,11 @@ class StorePointDetail extends Component {
     };
 
     handleClick = () => {
-        this.props.history.push('/app/home');
+        if (window.location.hash.indexOf('merchantId') > -1) {
+            window.location.href = `${window.location.origin}#/app/home`;
+        } else {
+            this.props.history.push('/app/home');
+        }
     };
 
     // 判断icon的显示

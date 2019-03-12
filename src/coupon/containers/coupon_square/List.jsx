@@ -155,7 +155,9 @@ class CouponList extends Component {
                 // 进行中，立即抢
                 return (
                     <div className="rob">
-                        <div className="text">剩余<span>{item.availInventory}</span>张</div>
+                        {
+                            parseInt(item.availInventory) > 50 ? null : <div className="text">剩余<span>{item.availInventory}</span>张</div>
+                        }
                         {
                             item.isuse != undefined && item.isuse == true ? (
                                 <MobileButton text="去使用" buttonClass="shortButton" handleClick={(e) => {this.goToUse(e, item.couponNumber)}} />
@@ -222,7 +224,7 @@ class CouponList extends Component {
                     <img src={coupon_list_title} alt="" />
                 </div>
                 <Tloader
-                    onRefresh={this.refresh}
+                    // onRefresh={this.refresh}
                     onLoadMore={this.loadMore}
                     hasMore={hasMore}
                     autoLoadMore={autoLoadMore}
@@ -236,7 +238,7 @@ class CouponList extends Component {
                         ) : (
                             <div className="content">
                                 <WingBlank size="sm">
-                                    <QueueAnim type="top">
+                                    <QueueAnim type={['right', 'left']}>
                                         {
                                             couponItems.map((couponItem, index) => {
                                                 return (

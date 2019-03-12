@@ -2,11 +2,11 @@ import React, {Component} from 'react';
 import { WhiteSpace, Tabs, WingBlank } from 'antd-mobile';
 import Tloader from 'react-touch-loader';
 import { StickyContainer, Sticky } from 'react-sticky';
+import {connect} from "react-redux";
 
 import GoodsItem from '@/point_mall/components/goods_item/GoodsItem';
 import no_data from '@/base/assets/images/no_data.png';
 import DeliveryCodeService from '@/point_mall/services/delivery_code/delivery_code.service';
-import {connect} from "react-redux";
 
 class DeliveryCode extends Component {
     state = {
@@ -176,11 +176,11 @@ class DeliveryCode extends Component {
                 <StickyContainer>
                     <Tabs tabs={tabs} initialPage={0} renderTabBar={this.renderTabBar} usePaged={true} animated={true} swipeable={false} onChange={this.tabChange}>
                         <Tloader
-                                 onRefresh={this.refresh}
-                                 onLoadMore={this.loadMore}
-                                 hasMore={hasMore}
-                                 autoLoadMore={autoLoadMore}
-                                 initializing={initializing}>
+                                // onRefresh={this.refresh}
+                                onLoadMore={this.loadMore}
+                                hasMore={hasMore}
+                                autoLoadMore={autoLoadMore}
+                                initializing={initializing}>
                             {
                                 goodsItems == '' ? (
                                     <div className="no-data">

@@ -16,6 +16,7 @@ import RechargeItem from '@/stored_value/containers/recharge/components/recharge
 import petrol_trade from '@/base/assets/images/petrol_trade.png';
 import gasoline_trade from '@/base/assets/images/gasoline_trade.png';
 import recharge_icon from "@/stored_value/assets/images/recharge_icon.png";
+import store_nothing from "@/stored_value/assets/images/store_nothing.png";
 
 import './recharge_component.less';
 
@@ -72,17 +73,22 @@ class RechargeComponent extends Component {
                 <WingBlank size="sm">
                     <Field text="请选择充值金额" imgSrc={recharge_icon} customClass="recharge-field"></Field>
                     <div className="flex-wrap">
-                        <Flex wrap="wrap" justify="between">
-                            {
-                                rechargeItems.map((rechargeItem, index) => {
-                                    return (
-                                        <RechargeItem customInputChange={customInputChange} isChecked={activeArr[index] === true} rechargeItem={rechargeItem} key={index} handleClick={(id, amount) => {this.handleClick(index, id, amount)}} />
-                                    )
-                                })
-                            }
-                        </Flex>
+                        {
+                            rechargeItems.length > 0 ? <Flex wrap="wrap" justify="between">
+                                {
+                                    rechargeItems.map((rechargeItem, index) => {
+                                        return (
+                                            <RechargeItem customInputChange={customInputChange} isChecked={activeArr[index] === true} rechargeItem={rechargeItem} key={index} handleClick={(id, amount) => {this.handleClick(index, id, amount)}} />
+                                        )
+                                    })
+                                }
+                            </Flex> : <div className="no-data">
+                                <img src={store_nothing} alt="" />
+                                <div>商家尚未配置充值规则</div>
+                            </div>
+                        }
                     </div>
-                    <div className="introduction">*充值说明：{rechargeIntro}</div>
+                    {rechargeIntro && rechargeItems.length > 0 ? <div className="introduction">*充值说明：{rechargeIntro}</div> : null}
                 </WingBlank>
             </div>
         )

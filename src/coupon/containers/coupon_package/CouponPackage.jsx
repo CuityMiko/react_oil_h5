@@ -224,14 +224,14 @@ class CouponPackage extends Component {
                                 </div>
                             ) : (
                                 <Tloader
-                                    onRefresh={this.refresh}
+                                    // onRefresh={this.refresh}
                                     onLoadMore={this.loadMore}
                                     hasMore={hasMore}
                                     autoLoadMore={autoLoadMore}
                                     initializing={initializing}>
                                     <div>
                                         <WingBlank size="sm">
-                                            <QueueAnim type="top">
+                                            <QueueAnim type={['right', 'left']}>
                                                 {
                                                     couponItems.map((couponItem, index) => {
                                                         return this.getRightContent(couponItem, index, status)

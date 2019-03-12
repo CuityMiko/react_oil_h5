@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {WhiteSpace, Flex, WingBlank} from 'antd-mobile';
 import {connect} from 'react-redux';
+import QueueAnim from 'rc-queue-anim';
 
 import OilCardDetail from './components/oil_card_detail/OilCardDetail';
 import Field from '@/common/components/field/Field';
@@ -178,64 +179,66 @@ class OilDetail extends Component {
 
     bindContent = (currentCard) => {
         return (
-            <div>
-                <div className="card-content">
-                    <WingBlank size="sm">
-                        {this.bindHeaderCard()}
-                    </WingBlank>
-                    <div className="save-content">
+            <QueueAnim style={{height:'100%'}} type={['right', 'left']} delay={200} duration={1500} leaveReverse={true} forcedReplay={true}>
+                <div key="card-content">
+                    <div className="card-content">
                         <WingBlank size="sm">
-                            <div>
-                                <Field imgSrc={vipIcon} text={currentCard != null ? `办理${currentCard.name}会员` : ''}>
-                                    <div>已累计为您节省了¥{currentCard != null ? Number(currentCard.totalDiscount).toFixed(2) : '0'}</div>
-                                </Field>
-                            </div>
+                            {this.bindHeaderCard()}
                         </WingBlank>
-                    </div>
-                    <div className="data-content">
-                        <WingBlank size="sm">
-                            <WhiteSpace />
-                            <Flex>
-                                <Flex.Item>
-                                    <Field imgSrc={storeIcon} text="累计积分" customClass="cumulative-data">
-                                        <div>
-                                            {currentCard != null ? currentCard.totalScore : '0'}
-                                        </div>
+                        <div className="save-content">
+                            <WingBlank size="sm">
+                                <div>
+                                    <Field imgSrc={vipIcon} text={currentCard != null ? `办理${currentCard.name}会员` : ''}>
+                                        <div>已累计为您节省了¥{currentCard != null ? Number(currentCard.totalDiscount).toFixed(2) : '0'}</div>
                                     </Field>
-                                </Flex.Item>
-                                <Flex.Item>
-                                    <Field imgSrc={consume} text="累计消费" customClass="cumulative-data">
-                                        <div>
-                                            ¥{currentCard != null ? Number(currentCard.totalUse).toFixed(2) : '0'}
-                                        </div>
-                                    </Field>
-                                </Flex.Item>
-                            </Flex>
-                            <WhiteSpace size="md" />
-                            <div className="oil-price-content">
-                                <Field imgSrc={currentCard != null && currentCard.id == 1 ? petrol_trade : gasoline_trade} text={currentCard != null && currentCard.id == 1 ? '汽油油品' : '柴油油品'} customClass="oil-price-content-header" />
-                                <WhiteSpace size="sm" />
-                                <Flex className="price-list price-list-tit">
-                                    <Flex.Item className="left">油品名称</Flex.Item>
-                                    <Flex.Item className="center">单价</Flex.Item>
-                                    <Flex.Item className="right">优惠价</Flex.Item>
+                                </div>
+                            </WingBlank>
+                        </div>
+                        <div className="data-content">
+                            <WingBlank size="sm">
+                                <WhiteSpace />
+                                <Flex>
+                                    <Flex.Item>
+                                        <Field imgSrc={storeIcon} text="累计积分" customClass="cumulative-data">
+                                            <div>
+                                                {currentCard != null ? currentCard.totalScore : '0'}
+                                            </div>
+                                        </Field>
+                                    </Flex.Item>
+                                    <Flex.Item>
+                                        <Field imgSrc={consume} text="累计消费" customClass="cumulative-data">
+                                            <div>
+                                                ¥{currentCard != null ? Number(currentCard.totalUse).toFixed(2) : '0'}
+                                            </div>
+                                        </Field>
+                                    </Flex.Item>
                                 </Flex>
-                                {
-                                    currentCard.proSkuDTOS.map((sku, index) => {
-                                        return (
-                                            <Flex className="price-list price-list-item" key={index}>
-                                                <Flex.Item className="left">{sku.oilName.length>5?(sku.oilName.substr(0,5).concat('...')):sku.oilName}</Flex.Item>
-                                                <Flex.Item className="center">¥{Number(sku.perAmount).toFixed(2)}/L</Flex.Item>
-                                                <Flex.Item className="right">{sku.activityAmount || sku.activityAmount > 0 ? `¥${Number(sku.activityAmount).toFixed(2)}/L` : '-'}</Flex.Item>
-                                            </Flex>
-                                        )
-                                    })
-                                }
-                            </div>
-                        </WingBlank>
+                                <WhiteSpace size="md" />
+                                <div className="oil-price-content">
+                                    <Field imgSrc={currentCard != null && currentCard.id == 1 ? petrol_trade : gasoline_trade} text={currentCard != null && currentCard.id == 1 ? '汽油油品' : '柴油油品'} customClass="oil-price-content-header" />
+                                    <WhiteSpace size="sm" />
+                                    <Flex className="price-list price-list-tit">
+                                        <Flex.Item className="left">油品名称</Flex.Item>
+                                        <Flex.Item className="center">单价</Flex.Item>
+                                        <Flex.Item className="right">优惠价</Flex.Item>
+                                    </Flex>
+                                    {
+                                        currentCard.proSkuDTOS.map((sku, index) => {
+                                            return (
+                                                <Flex className="price-list price-list-item" key={index}>
+                                                    <Flex.Item className="left">{sku.oilName.length>5?(sku.oilName.substr(0,5).concat('...')):sku.oilName}</Flex.Item>
+                                                    <Flex.Item className="center">¥{Number(sku.perAmount).toFixed(2)}/L</Flex.Item>
+                                                    <Flex.Item className="right">{sku.activityAmount || sku.activityAmount > 0 ? `¥${Number(sku.activityAmount).toFixed(2)}/L` : '-'}</Flex.Item>
+                                                </Flex>
+                                            )
+                                        })
+                                    }
+                                </div>
+                            </WingBlank>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </QueueAnim>
         )
     }
 

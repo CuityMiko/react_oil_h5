@@ -115,7 +115,7 @@ const GetMemberCoupons = (data) => {
                 if(item.dateType == 0) {
                     date = `${moment(item.useTimeBegin).format('MM.DD')} - ${moment(item.useTimeEnd).format('MM.DD')}`
                 } else if(item.dateType == 1) {
-                    date = `${moment().format('MM.DD')} - ${moment().add(item.fixedTerm-1, 'days').format('MM.DD')}`
+                    date = `${moment(item.getTime).format('MM.DD')} - ${moment().add(item.fixedTerm-1, 'days').format('MM.DD')}`
                 }
                 let _ritem = {
                     id: item.id,

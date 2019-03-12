@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { Tabs, Toast } from 'antd-mobile';
 import { StickyContainer, Sticky } from 'react-sticky';
 import {connect} from 'react-redux';
+import QueueAnim from 'rc-queue-anim';
 
 import RechargeComponent from "@/stored_value/containers/recharge/components/recharge_component/RechargeComponent";
 import BottomContent from "@/common/components/bottom_content/BottomContent";
@@ -34,7 +35,7 @@ class Recharge extends Component {
             this.bindCurrentRechargeInfo(() => {
                 this.bindTabs();
             })
-        }, 500)
+        }, 300)
     }
 
     /**
@@ -220,7 +221,7 @@ class Recharge extends Component {
             cardSpecId
         } = this.state;
         return (
-            <div className="animated fadeIn recharge-container">
+            <div className="animated fadeIn recharge-container" key="recharge">
                 {
                     // 如果用户只有单张卡，则不显示tab栏
                     cardCount > 1 ? (
@@ -233,11 +234,13 @@ class Recharge extends Component {
                         <RechargeComponent customInputChange={this.customInputChange} handleClick={this.rechargeHandleClick} defineRecharge={defineRecharge} rechargeItems={rechargeItems} cardType="gas" account={availableAmount} rechargeIntro={storedDesc} />
                     )
                 }
-                <BottomContent customClass="bottom-content">
-                    <div className="button-box">
-                        <MobileButton text="确定充值" buttonClass="longButton" customClass="button-class" handleClick={this.ToRechargeAndOrder} />
-                    </div>
-                </BottomContent>
+                {
+                    rechargeItems.length > 0 ? <BottomContent customClass="bottom-content">
+                        <div className="button-box">
+                            <MobileButton text="确定充值" buttonClass="longButton" customClass="button-class" handleClick={this.ToRechargeAndOrder} />
+                        </div>
+                    </BottomContent> : null
+                }
             </div>
         );
     }

@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { WingBlank, WhiteSpace, ActivityIndicator } from 'antd-mobile';
 import moment from 'moment';
 import {connect} from 'react-redux';
+import QueueAnim from 'rc-queue-anim';
 
 import Field from "@/common/components/field/Field";
 import MobileButton from "@/common/components/mobile_button/MobileButton";
@@ -60,7 +61,7 @@ class RechargeSuccess extends Component {
                     tradeCard: res.cardSpecName,
                     method: res.payEntryText,
                     tradeNumber: res.orderNumber,
-                    time: moment(res.createTime).format('YYYY.MM.DD hh:ss'),
+                    time: moment(res.createTime).format('YYYY.MM.DD HH:mm:ss'),
                     giftContent: res.giftContent, // 赠送
                     giftType: res.giftType // 赠送类型 0：金额 1：积分 2：卡券
                 }
@@ -204,46 +205,48 @@ class RechargeSuccess extends Component {
         const {hasResult, itemsMap, modal, couponItem, listItems} = this.state;
         if (hasResult) {
             return (
-                <div className="animated fadeIn grey-back recharge-success-container">
-                    <PopupComponent visible={modal} onClose={this.onClose('modal')} direction="flex-start">
-                        <div className="recharge-gift-coupon-popup">
-                            <img src={gift_coupon_popup} alt="" />
-                            <div className="text">送您一张优惠券</div>
+                <QueueAnim style={{height:'100%'}} type={['right', 'left']} delay={200} duration={1500} leaveReverse={true} forcedReplay={true}>
+                    <div className="animated fadeIn grey-back recharge-success-container" key="recharge-success">
+                        <PopupComponent visible={modal} onClose={this.onClose('modal')} direction="flex-start">
+                            <div className="recharge-gift-coupon-popup">
+                                <img src={gift_coupon_popup} alt="" />
+                                <div className="text">送您一张优惠券</div>
+                                <WingBlank size="sm">
+                                    <CouponComponent couponItem={couponItem}>
+                                        <MobileButton text="去使用" handleClick={() => this.goToPay(couponItem.couponNumber)} customClass="shortButton" />
+                                    </CouponComponent>
+                                </WingBlank>
+                            </div>
+                        </PopupComponent>
+                        <div className="content">
+                            <WhiteSpace size="xs" />
                             <WingBlank size="sm">
-                                <CouponComponent couponItem={couponItem}>
-                                    <MobileButton text="去使用" handleClick={() => this.goToPay(couponItem.couponNumber)} customClass="shortButton" />
-                                </CouponComponent>
+                                <div className="banner">
+                                    <div className="box">
+                                        <div className="title">充值成功</div>
+                                        <div className="gift-amount">{listItems.giftType == 0 ? `赠送金额：¥${listItems.giftContent}元` : listItems.giftType == 1 ? `赠送积分：${listItems.giftContent}积分` : null}</div>
+                                    </div>
+                                </div>
+                                <Field text="订单详情" imgSrc={order_icon} customClass="field-class" />
+                                {
+                                    [...itemsMap].map((item, index) => {
+                                        return (
+                                            <Field text={item[1][0]} key={index}
+                                                customClass={`store-point-detail-field ${(item[1][0] === '支付方式')?'field-border':''}`}
+                                            >
+                                                {this.judgeDisplay(item[1][0], item[1][1])}
+                                            </Field>
+                                        )
+                                    })
+                                }
                             </WingBlank>
                         </div>
-                    </PopupComponent>
-                    <div className="content">
-                        <WhiteSpace size="xs" />
-                        <WingBlank size="sm">
-                            <div className="banner">
-                                <div className="box">
-                                    <div className="title">充值成功</div>
-                                    <div className="gift-amount">{listItems.giftType == 0 ? `赠送金额：¥${listItems.giftContent}元` : listItems.giftType == 1 ? `赠送积分：${listItems.giftContent}积分` : null}</div>
-                                </div>
-                            </div>
-                            <Field text="订单详情" imgSrc={order_icon} customClass="field-class" />
-                            {
-                                [...itemsMap].map((item, index) => {
-                                    return (
-                                        <Field text={item[1][0]} key={index}
-                                            customClass={`store-point-detail-field ${(item[1][0] === '支付方式')?'field-border':''}`}
-                                        >
-                                            {this.judgeDisplay(item[1][0], item[1][1])}
-                                        </Field>
-                                    )
-                                })
-                            }
+                        <WhiteSpace size="xl" />
+                        <WingBlank size="md">
+                            <MobileButton text="确 认" handleClick={this.goToHome} customClass="longButton" />
                         </WingBlank>
                     </div>
-                    <WhiteSpace size="xl" />
-                    <WingBlank size="md">
-                        <MobileButton text="确 认" handleClick={this.goToHome} customClass="longButton" />
-                    </WingBlank>
-                </div>
+                </QueueAnim>
             )
         } else {
             return <ActivityIndicator size="large" animating={!hasResult} toast text="等待充值结果中，请稍等..." />

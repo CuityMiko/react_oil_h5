@@ -1,0 +1,235 @@
+.am-number-keyboard-wrapper table tr .am-number-keyboard-item.keyboard-confirm {
+  color: #ffffff;
+  background-color: #FF544C !important;
+}
+.c-to-b-container {
+  height: 100%;
+}
+.c-to-b-container .header {
+  background-color: #ffffff;
+  overflow: hidden;
+}
+.c-to-b-container .header .select-oil-field {
+  padding: 24px 0;
+}
+.c-to-b-container .header .select-oil-field .icon-img {
+  width: 42px;
+  height: 42px;
+}
+.c-to-b-container .header .select-oil-field .right-content {
+  font-size: 28px;
+  font-weight: 400;
+  color: #808080;
+}
+.c-to-b-container .header .select-oil-field .right-content .right {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.c-to-b-container .header .select-oil-field .right-content .right img {
+  width: 48px;
+  height: 42px;
+  margin-left: 18px;
+}
+.c-to-b-container .header .oil-pro-box {
+  margin-left: 26px;
+  display: -webkit-box;
+  overflow-x: scroll;
+  -webkit-overflow-scrolling: touch !important;
+}
+.c-to-b-container .header .oil-pro-box::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
+}
+.c-to-b-container .header .oil-pro-box .oil-pro {
+  width: 172px!important;
+  height: 72px;
+  border: 3px solid #DBDBDB;
+  border-radius: 10px;
+  margin-right: 26px;
+  font-size: 32px;
+  font-weight: 600;
+  color: #333333;
+  text-align: center;
+  line-height: 66px;
+  box-sizing: border-box;
+}
+.c-to-b-container .header .oil-pro-box .oil-pro-checked {
+  height: 80px;
+  line-height: 72px;
+  color: #FF544C;
+  background-color: #FFF0F0;
+  border-color: #FF544C;
+}
+.c-to-b-container .header .oil-price-box {
+  background-color: #F5F5F5;
+  margin: 30px 0 20px;
+}
+.c-to-b-container .header .oil-price-box .oil-price-field {
+  font-size: 28px;
+  font-weight: 400;
+  color: #808080;
+  padding: 20px 0;
+  margin: 0 20px;
+}
+.c-to-b-container .header .oil-price-box .oil-price-field .field-name {
+  margin-left: 0;
+}
+.c-to-b-container .header .oil-price-box .oil-price-field .right-content {
+  color: #333333;
+}
+.c-to-b-container .header .oil-price-box .oil-price-field .right-content .oil-price-field-right {
+  display: flex;
+  align-items: center;
+}
+.c-to-b-container .header .oil-price-box .oil-price-field .right-content .oil-price-field-right img {
+  width: 31px;
+  height: 30px;
+  margin-right: 8px;
+}
+.c-to-b-container .header .oil-price-box .discount-price-field .right-content {
+  color: #FF544C;
+}
+.c-to-b-container .header .am-list-item {
+  padding-left: 0;
+}
+.c-to-b-container .header .am-list-item img {
+  width: 120px;
+  height: 40px;
+}
+.c-to-b-container .header .am-list-item .am-list-line {
+  padding-right: 0;
+}
+.c-to-b-container .header .am-list-item .am-list-line .am-input-label {
+  font-size: 60px!important;
+  font-weight: 500;
+  color: #333333;
+}
+.c-to-b-container .header .am-list-item .am-list-line .am-input-label.am-input-label-5 {
+  width: 60px;
+}
+.c-to-b-container .header .am-list-item .am-list-line .am-input-control .fake-input-container .fake-input-placeholder {
+  font-size: 52px;
+}
+.c-to-b-container .header .am-list-item .am-list-line .am-input-control .fake-input-container .fake-input {
+  font-size: 52px;
+  color: #333333;
+  font-weight: 500;
+}
+.c-to-b-container .header .am-list-item .am-list-line .am-list-content {
+  color: #333333;
+  font-size: 28px;
+  font-weight: 400;
+}
+.c-to-b-container .header .am-list-item .am-list-line .am-list-extra {
+  font-size: 28px;
+  font-weight: 500;
+  color: #353535;
+}
+.c-to-b-container .header .am-list-body::before,
+.c-to-b-container .header .am-list-body::after {
+  display: none;
+}
+.c-to-b-container .header .am-list-body div:not(:last-child) .am-list-line::after {
+  display: none;
+}
+.c-to-b-container .middle {
+  background-color: #ffffff;
+}
+.c-to-b-container .middle .select-pay-field {
+  font-size: 28px;
+  font-weight: 400;
+  color: #808080;
+  padding: 25px 0;
+  border-bottom: 1px solid rgba(219, 219, 219, 0.7);
+}
+.c-to-b-container .middle .select-pay-field .field-name {
+  margin-left: 0;
+}
+.c-to-b-container .middle .select-pay-field .right-content {
+  color: #FF544C;
+  font-weight: 500;
+}
+.c-to-b-container .middle .select-pay-field .right-content .select-pay-right {
+  display: flex;
+  align-items: center;
+}
+.c-to-b-container .middle .select-pay-field .right-content .select-pay-right img {
+  width: 26px;
+  height: 26px;
+}
+.c-to-b-container .middle .pay-field {
+  font-size: 28px;
+  font-weight: 400;
+  color: #000020;
+  padding-top: 38px;
+}
+.c-to-b-container .middle .pay-field:last-child {
+  padding-bottom: 38px;
+}
+.c-to-b-container .middle .pay-field .field-name {
+  margin-left: 0;
+}
+.c-to-b-container .middle .pay-field .field-name .subtext {
+  color: #808080;
+}
+.c-to-b-container .middle .pay-field .icon-img {
+  width: 36px;
+  height: 36px;
+  margin-right: 19px;
+}
+.c-to-b-container .middle .pay-field .right-content {
+  display: flex;
+  align-items: center;
+}
+.c-to-b-container .middle .am-list-item {
+  padding-left: 0;
+  min-height: 40px;
+}
+.c-to-b-container .middle .am-list-item .am-list-line {
+  padding-right: 0;
+}
+.c-to-b-container .middle .am-list-item .am-list-line .am-list-extra {
+  width: 32px;
+  height: 32px;
+  flex-basis: auto;
+  padding: 0;
+}
+.c-to-b-container .middle .am-list-item .am-list-line .am-list-extra .am-radio-wrapper {
+  width: 32px;
+  height: 32px;
+}
+.c-to-b-container .middle .am-list-item .am-list-line .am-list-extra .am-radio-wrapper .am-radio {
+  width: 32px;
+  height: 32px;
+  border: 2px solid #dbdbdb;
+  border-radius: 4px;
+  box-sizing: border-box;
+  vertical-align: top;
+}
+.c-to-b-container .middle .am-list-item .am-list-line .am-list-extra .am-radio-wrapper .am-radio input {
+  width: 32px;
+  height: 32px;
+}
+.c-to-b-container .middle .am-list-item .am-list-line .am-list-extra .am-radio-wrapper .am-radio .am-radio-inner {
+  width: 32px;
+  height: 32px;
+}
+.c-to-b-container .middle .am-list-item .am-list-line .am-list-extra .am-radio-wrapper .am-radio.am-radio-checked {
+  border: none;
+}
+.c-to-b-container .middle .am-list-item .am-list-line .am-list-extra .am-radio-wrapper .am-radio.am-radio-checked .am-radio-inner:after {
+  background-image: url("../../assets/images/payment_selected.png");
+  background-size: 32px 32px;
+  top: 0;
+  right: 0;
+  width: 32px;
+  height: 32px;
+  border: none;
+  -webkit-transform: none;
+  transform: none;
+}
+.c-to-b-container .c-to-b-button {
+  border-radius: 4px;
+}

@@ -117,7 +117,7 @@ class MallDetail extends Component {
             return (
                 <div className="animated fadeIn grey-back mall-detail-container">
                     <DetailBanner img={goodsdetail.goodsImg || default_bg} name= {goodsdetail.goodsName}>
-                        <Field text={`仅剩${goodsdetail.count}件剩余`} customClass="detail-banner-field" imgSrc={goods_remain_icon} />
+                        <Field text={`仅剩${goodsdetail.count}件`} customClass="detail-banner-field" imgSrc={goods_remain_icon} />
                     </DetailBanner>
                     <div className="detail-content">
                         <WingBlank size="sm">
@@ -132,7 +132,7 @@ class MallDetail extends Component {
                     <BottomContent>
                         <div className="text">
                             <div className="score"><span>{goodsdetail.score}</span>积分</div>
-                            <div className="money">¥{goodsdetail.price}</div>
+                            <div className="money">¥{Number(goodsdetail.price).toFixed(2)}</div>
                         </div>
                         <div className="button">
                             {this.GetBottomBtn(goodsdetail.score)}
