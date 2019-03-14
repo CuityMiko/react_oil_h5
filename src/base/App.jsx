@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { receiveData, GetMerchantInfoAction, GetUserLoginInfoAction, GetMemberInfoAction } from '@/base/redux/actions';
 import Routers from '@/base/routes/router';
+import {get} from '../base/utils/cookie';
 
 class App extends Component {
     state = {
@@ -96,6 +97,12 @@ class App extends Component {
                 const wxmerchantId = sessionStorage.getItem('wxmerchantId');
                 if (wxmerchantId) {
                     GetMerchantInfoAction(parseInt(wxmerchantId));
+                } else {
+                    // 从cookie中获取商户ID
+                    let _merchantid = get('merchantId');
+                    if (_merchantid) {
+                        GetMerchantInfoAction(_merchantid);
+                    }
                 }
             }
         }

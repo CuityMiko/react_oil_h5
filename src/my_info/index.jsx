@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import { 
-    WhiteSpace, WingBlank, List, InputItem, ImagePicker, Toast, DatePicker, Picker
- } from 'antd-mobile';
+import { WhiteSpace, WingBlank, List, InputItem, ImagePicker, Toast, DatePicker, Picker } from 'antd-mobile';
 import moment from 'moment';
 import WxImageViewer from 'react-wx-images-viewer';
 import QueueAnim from 'rc-queue-anim';
@@ -15,6 +13,7 @@ import phoneIcon from '@/my_info/assets/images/phone_icon.png';
 import MobileButton from '@/common/components/mobile_button/MobileButton';
 import {GetMemberInfoAction} from '@/base/redux/actions';
 import MyInfoService from './services/my_info.service';
+import {imageCompress} from '@/base/utils/index'
 
 const Item = List.Item;
 
@@ -54,23 +53,56 @@ class MyInfo extends Component {
      * 选择上传头像
      */
     uploadAvatar = (files, operationType, index) => {
+        let _self = this;
         if (operationType == 'remove') {
             files.slice(index, 1);
-            this.setState({avatar: files});
+            _self.setState({avatar: files});
         } else {
+            Toast.loading('头像上传中...');
             if (files.length > 0) {
-                if (files[0].file.size > 2048 * 1024) {
-                    Toast.info('头像大小需小于2M', 2);
-                    return;
+                if (files[0].file.size >= 2048 * 1024) {
+                    imageCompress(files[0].file, 0.1, (resfile) => {
+                        if (resfile != null) {
+                            if (resfile.size >= 2048 * 1024) {
+                                Toast.info('上传头像过大，请重新上传');
+                                return;
+                            }
+                            CommonService.Upload(resfile).then(res => {
+                                if (res.results.length > 0) {
+                                    const avatar = [{url: res.results[0].url}];
+                                    _self.setState({avatar}, () => {
+                                        Toast.hide();
+                                    })
+                                }
+                            })
+                        } else {
+                            Toast.info('上传头像失败');
+                        }
+                    })
+                } else {
+                    CommonService.Upload(files[0].file).then(res => {
+                        if (res.results.length > 0) {
+                            const avatar = [{url: res.results[0].url}];
+                            _self.setState({avatar}, () => {
+                                Toast.hide();
+                            })
+                        }
+                    }) 
                 }
-                CommonService.Upload(files[0].file).then(res => {
-                    if (res.results.length > 0) {
-                        const avatar = [{url: res.results[0].url}];
-                        this.setState({avatar})
-                    }
-                })   
             }
         }
+    }
+
+    /**
+     * base64图片转换成file对象
+     */
+    dataURLtoFile = (dataurl, filename) => {//将base64转换为文件
+        var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+        while(n--){
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, {type:mime});
     }
 
     /**

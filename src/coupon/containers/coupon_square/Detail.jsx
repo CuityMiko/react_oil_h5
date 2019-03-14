@@ -84,7 +84,8 @@ class CouponDetail extends Component {
                         date = `领取后${res.fixedTerm}天内有效`
                     }
                 }
-                this.setState({couponObj: {...res, applyGoods, date}}, () => {
+                let status = query.status ? parseInt(query.status) : res.status
+                this.setState({couponObj: {...res, applyGoods, date, status}}, () => {
                     this.bindInfo();
                 })
             } else {
