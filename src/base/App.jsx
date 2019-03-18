@@ -6,7 +6,6 @@ import { receiveData, GetMerchantInfoAction, GetUserLoginInfoAction, GetMemberIn
 import Routers from '@/base/routes/router';
 import {get} from '@/base/utils/cookie';
 
-
 class App extends Component {
     state = {
         collapsed: false,
