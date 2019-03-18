@@ -233,57 +233,55 @@ class StoredValueList extends Component {
             totalpage, pageindex
         } = this.state;
         return (
-            <QueueAnim style={{height:'100%'}} type={['right', 'left']} delay={200} duration={1500} leaveReverse={true} forcedReplay={true}>
-                <div className="store-list-container" key="store-list">
-                    <StorePointListHeader fieldImg={store_value_list_icon}
-                        fieldText={account.toFixed(2).toString()}
-                        fieldSubtext="元"
-                        buttonText="前往充值"
-                        buttonClick={this.goRecharge}
-                    />
-                    <div className="store-list-tab-container">
-                        <StickyContainer>
-                            <Tabs tabs={tabs} initialPage={0} swipeable={false}
-                                renderTabBar={this.renderTabBar}
-                                onTabClick={(tab, index) => {this.onTabClick(tab,index)}}>
-                                <Tloader
-                                    // onRefresh={this.refresh}
-                                    onLoadMore={this.loadMore}
-                                    hasMore={hasMore}
-                                    autoLoadMore={autoLoadMore}
-                                    initializing={initializing}>
-                                    {
-                                        data.length <= 0 ? (
-                                            <div className="no-data">
-                                                <img src={no_data} alt="" />
-                                                <div>暂无数据</div>
-                                            </div>
-                                        ) : (
-                                            <div className="list-item-wrap">
-                                                <List>
-                                                    <QueueAnim type='top'>
-                                                        {
-                                                            data.map((item, index) => {
-                                                                return (
-                                                                    <StorePointListItem item={item}
-                                                                        key={index}
-                                                                        handleClick={this.handleClick}
-                                                                    />
-                                                                )
-                                                            })
-                                                        }
-                                                    </QueueAnim>
-                                                </List>
-                                                {totalpage == pageindex ? <div className="no-more">没有更多了...</div> : null}
-                                            </div>
-                                        )
-                                    }
-                                </Tloader>
-                            </Tabs>
-                        </StickyContainer>
-                    </div>
+            <div className="store-list-container" key="store-list">
+                <StorePointListHeader fieldImg={store_value_list_icon}
+                    fieldText={account.toFixed(2).toString()}
+                    fieldSubtext="元"
+                    buttonText="前往充值"
+                    buttonClick={this.goRecharge}
+                />
+                <div className="store-list-tab-container">
+                    <StickyContainer>
+                        <Tabs tabs={tabs} initialPage={0} swipeable={false}
+                            renderTabBar={this.renderTabBar}
+                            onTabClick={(tab, index) => {this.onTabClick(tab,index)}}>
+                            <Tloader
+                                // onRefresh={this.refresh}
+                                onLoadMore={this.loadMore}
+                                hasMore={hasMore}
+                                autoLoadMore={autoLoadMore}
+                                initializing={initializing}>
+                                {
+                                    data.length <= 0 ? (
+                                        <div className="no-data">
+                                            <img src={no_data} alt="" />
+                                            <div>暂无数据</div>
+                                        </div>
+                                    ) : (
+                                        <div className="list-item-wrap">
+                                            <List>
+                                                <QueueAnim type='top'>
+                                                    {
+                                                        data.map((item, index) => {
+                                                            return (
+                                                                <StorePointListItem item={item}
+                                                                    key={index}
+                                                                    handleClick={this.handleClick}
+                                                                />
+                                                            )
+                                                        })
+                                                    }
+                                                </QueueAnim>
+                                            </List>
+                                            {totalpage == pageindex ? <div className="no-more">没有更多了...</div> : null}
+                                        </div>
+                                    )
+                                }
+                            </Tloader>
+                        </Tabs>
+                    </StickyContainer>
                 </div>
-            </QueueAnim>
+            </div>
         );
     }
 }

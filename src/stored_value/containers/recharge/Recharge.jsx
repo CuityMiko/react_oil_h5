@@ -24,6 +24,7 @@ class Recharge extends Component {
         rechargeAccount: 0,
         rechargeRuleId: 0,
         cardId: 0,
+        isPay: false // 是否发起支付
     };
 
     componentWillMount() {
@@ -190,6 +191,7 @@ class Recharge extends Component {
             if (rechargeAccount <= 0) {
                 Toast.info('充值金额有误');  
               } else {
+                  this.setState({isPay: true});
                   RechargeService.ToRecharge({
                       rechargeRuleId,
                       amount: Number(rechargeAccount),
@@ -202,7 +204,10 @@ class Recharge extends Component {
                           if (res.url) {
                             window.location.href = res.url;
                           }
+                          // this.setState({isPay: false});
                       }
+                  }).catch(err => {
+                    this.setState({isPay: false});
                   })
               }
         } else {
@@ -218,7 +223,8 @@ class Recharge extends Component {
             availableAmount,
             storedDesc,
             defineRecharge,
-            cardSpecId
+            cardSpecId,
+            isPay
         } = this.state;
         return (
             <div className="animated fadeIn recharge-container" key="recharge">
@@ -237,7 +243,7 @@ class Recharge extends Component {
                 {
                     rechargeItems.length > 0 ? <BottomContent customClass="bottom-content">
                         <div className="button-box">
-                            <MobileButton text="确定充值" buttonClass="longButton" customClass="button-class" handleClick={this.ToRechargeAndOrder} />
+                            <MobileButton text="确定充值" disabled={isPay} buttonClass="longButton" customClass="button-class" handleClick={this.ToRechargeAndOrder} />
                         </div>
                     </BottomContent> : null
                 }

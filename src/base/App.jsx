@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import DocumentTitle from 'react-document-title';
 
 import { receiveData, GetMerchantInfoAction, GetUserLoginInfoAction, GetMemberInfoAction } from '@/base/redux/actions';
 import Routers from '@/base/routes/router';
+import {get} from '@/base/utils/cookie';
+
 
 class App extends Component {
     state = {
         collapsed: false,
         width: 0,
-        height: 0
+        height: 0,
+        title: '爱加油'
     };
 
     componentWillMount() {
@@ -96,6 +100,12 @@ class App extends Component {
                 const wxmerchantId = sessionStorage.getItem('wxmerchantId');
                 if (wxmerchantId) {
                     GetMerchantInfoAction(parseInt(wxmerchantId));
+                } else {
+                    // 从cookie中获取商户ID
+                    let _merchantid = get('merchantId');
+                    if (_merchantid) {
+                        GetMerchantInfoAction(_merchantid);
+                    }
                 }
             }
         }
@@ -141,20 +151,31 @@ class App extends Component {
     getClientWidth = () => {
         const {receiveData} = this.props;
         // 获取当前屏幕大小
-        const width = window.innerWidth;
-        const height = window.innerHeight;
+        const width = window.innerWidth || 750;
+        const height = window.innerHeight || 1200;
         this.setState({width, height});
         let res = this.judge();
         // 是否是微信
         receiveData({isWechat: res.isWechat, isIOS: res.isIOS}, 'rootinfo');
     };
+
+    /**
+     * 设置文档标题
+     */
+    setTitle = ({ title }) => {
+        if (!title) return;
+        if (this.state.title === title) return;
+        this.setState({ title });
+    }
     
     render() {
-        const { width, height } = this.state;
+        const { width, height, title } = this.state;
         return (
-            <div style={{width, height}} key="app">
-                <Routers history={this.props.history}/>
-            </div>
+            <DocumentTitle title={title}>
+                <div style={{width, height}} key="app">
+                    <Routers history={this.props.history} onRouterChange={this.setTitle} />
+                </div>
+            </DocumentTitle>
         );
     }
 }

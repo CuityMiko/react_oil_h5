@@ -123,18 +123,11 @@ class MallList extends Component {
             })
         }
     }
-    
     render() {
         const { goodsItems, hasMore, initializing, autoLoadMore } = this.state;
         const {MemberInfo, rootinfo} = this.props;
         return (
             <div className="grey-back mall-list-container">
-                <Field text={MemberInfo && MemberInfo.name ? MemberInfo.name : '-'} customClass="define-field-class" imgSrc={MemberInfo && MemberInfo.headimgUrl ? MemberInfo.headimgUrl : default_head_img}>
-                    <div className="field-right-content">
-                        <img src={point_diamond} alt="" />
-                        <div className="text"><span className="bigger">{MemberInfo && MemberInfo.availableScore ? MemberInfo.availableScore : '0'}</span>积分</div>
-                    </div>
-                </Field>
                 <Tloader
                     // onRefresh={this.refresh}
                     onLoadMore={this.loadMore}
@@ -143,26 +136,43 @@ class MallList extends Component {
                     initializing={initializing}>
                 {
                     goodsItems == null || goodsItems.length <= 0 ? (
-                        <div className="no-data">
-                            <img src={no_data} alt="" />
-                            <div>暂无数据</div>
+                        <div style={{height:'100%'}}>
+                            <Field text={MemberInfo && MemberInfo.name ? MemberInfo.name : '-'} customClass="define-field-class" imgSrc={MemberInfo && MemberInfo.headimgUrl ? MemberInfo.headimgUrl : default_head_img}>
+                                <div className="field-right-content">
+                                    <img src={point_diamond} alt="" />
+                                    <div className="text"><span className="bigger">{MemberInfo && MemberInfo.availableScore ? MemberInfo.availableScore : '0'}</span>积分</div>
+                                </div>
+                            </Field>
+                            <div className="no-data">
+                                <img src={no_data} alt="" />
+                                <div>暂无数据</div>
+                            </div>
                         </div>
                     ) : (
-                        <div className="content">
-                            <WhiteSpace size="xs" />
-                            <WingBlank size="sm">
-                                <div className="goods-item-wrap">
-                                    {
-                                        goodsItems.map((goodsItem, index) => {
-                                            return (
-                                                <GoodsItem goodsItem={goodsItem} useScene="mallList" key={index} handleClick={(e) => {this.goToDetail(goodsItem.id)}} redeemClick={(id) => {this.redeemClick(id)}} />
-                                            )
-                                        })
-                                    }
-                                    {rootinfo.isIOS?(<WhiteSpace size="xl" />):('')}
+                        <div style={{height:'100%'}}>
+                            <Field text={MemberInfo && MemberInfo.name ? MemberInfo.name : '-'} customClass="define-field-class" imgSrc={MemberInfo && MemberInfo.headimgUrl ? MemberInfo.headimgUrl : default_head_img}>
+                                <div className="field-right-content">
+                                    <img src={point_diamond} alt="" />
+                                    <div className="text"><span className="bigger">{MemberInfo && MemberInfo.availableScore ? MemberInfo.availableScore : '0'}</span>积分</div>
                                 </div>
-                            </WingBlank>
+                            </Field>
+                            <div className="content">
+                                <WhiteSpace size="xs" />
+                                <WingBlank size="sm">
+                                    <div className="goods-item-wrap">
+                                        {
+                                            goodsItems.map((goodsItem, index) => {
+                                                return (
+                                                    <GoodsItem goodsItem={goodsItem} useScene="mallList" key={index} handleClick={(e) => {this.goToDetail(goodsItem.id)}} redeemClick={(id) => {this.redeemClick(id)}} />
+                                                )
+                                            })
+                                        }
+                                        {rootinfo.isIOS?(<WhiteSpace size="xl" />):('')}
+                                    </div>
+                                </WingBlank>
+                            </div>
                         </div>
+
                     )
                 }
                 </Tloader>

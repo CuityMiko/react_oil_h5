@@ -92,7 +92,7 @@ class PaySuccess extends Component {
                     }
                     // dateType 卡券使用有效期类型 0-固定时间 1-立即生效
                     if(couponResult.giftCoupon.dateType == 0) {
-                        couponItem.date = `${moment(couponResult.giftCoupon.actTimeStart).format('MM.DD')} - ${moment(couponResult.giftCoupon.actTimeEnd).format('MM.DD')}`;
+                        couponItem.date = `${moment(couponResult.giftCoupon.useTimeBegin).format('MM.DD')} - ${moment(couponResult.giftCoupon.useTimeEnd).format('MM.DD')}`;
                     } else if(couponResult.giftCoupon.dateType == 1) {
                         couponItem.date = `领取后${couponResult.giftCoupon.fixedTerm}天内有效`;
                     }

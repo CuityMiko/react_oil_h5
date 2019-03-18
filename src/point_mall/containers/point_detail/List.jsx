@@ -111,26 +111,24 @@ class PointDetail extends Component {
         const {MemberInfo} = this.props;
 
         return (
-            <QueueAnim style={{height:'100%'}} type={['right', 'left']} delay={200} duration={1500} leaveReverse={true} forcedReplay={true}>
-                <div className="point-list-container" style={modal ? {overflow: 'hidden'}: {overflow: 'auto'}} key="point-list-detail">
-                    <StorePointListHeader
-                        fieldImg={point_diamond}
-                        fieldText={MemberInfo && MemberInfo.availableScore.toString() ? MemberInfo.availableScore.toString() : '0'}
-                        fieldSubtext="积分"
-                        buttonText="积分须知"
-                        buttonClick={this.showModal('modal')}
-                    />
-                    <PopupComponent visible={modal} onClose={this.onClose('modal')} direction="center" >
-                        <PointIntro />
-                    </PopupComponent>
-                    <StorePointListTab dataItems={currentflag == 0 ? dataSource : []}
-                        dataItemsIncrease={currentflag == 1 ? dataSource : []}
-                        dataItemsDecrease={currentflag == 2 ? dataSource : []}
-                        itemHandleClick={this.handleClick}
-                        onTabClick={this.onTabClick}
-                    />
-                </div>
-            </QueueAnim>
+            <div className="point-list-container" style={modal ? {overflow: 'hidden'}: {overflow: 'auto'}} key="point-list-detail">
+                <StorePointListHeader
+                    fieldImg={point_diamond}
+                    fieldText={MemberInfo && MemberInfo.availableScore.toString() ? MemberInfo.availableScore.toString() : '0'}
+                    fieldSubtext="积分"
+                    buttonText="积分须知"
+                    buttonClick={this.showModal('modal')}
+                />
+                <PopupComponent visible={modal} onClose={this.onClose('modal')} direction="center" >
+                    <PointIntro />
+                </PopupComponent>
+                <StorePointListTab dataItems={currentflag == 0 ? dataSource : []}
+                    dataItemsIncrease={currentflag == 1 ? dataSource : []}
+                    dataItemsDecrease={currentflag == 2 ? dataSource : []}
+                    itemHandleClick={this.handleClick}
+                    onTabClick={this.onTabClick}
+                />
+            </div>
         );
     }
 }

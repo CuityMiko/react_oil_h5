@@ -11,6 +11,7 @@ export default class CRouter extends Component {
         return component;
     };
     render() {
+        const {onRouterChange} = this.props;
         return (
             <Switch>
                 {
@@ -28,6 +29,8 @@ export default class CRouter extends Component {
                                                 document.title = r.title
                                             }
                                             Object.assign(props, {query: queryString.parse(props.location.search), params: props.match.params});
+                                            // 回传route配置
+                                            onRouterChange && onRouterChange(r);
                                             return r.login ? 
                                             <Component {...props} />
                                             : this.requireLogin(<Component {...props} />, r.auth)}

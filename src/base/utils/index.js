@@ -1,3 +1,5 @@
+import lrz from 'lrz';
+
 /**
  *  页面级别工具类.
  */
@@ -85,3 +87,44 @@ export const getWXCode = (key) => {
        }
    }
 }
+
+/**
+ * 将base64转换为文件
+ * @param {*} dataurl base64图片
+ * @param {*} filename 文件名称
+ */
+const dataURLtoFile = (dataurl, filename) => {
+   var arr = dataurl.split(','), mime = arr[0].match(/:(.*?);/)[1],
+   bstr = atob(arr[1]), n = bstr.length, u8arr = new Uint8Array(n);
+   while(n--){
+       u8arr[n] = bstr.charCodeAt(n);
+   }
+   return new File([u8arr], filename, {type:mime});
+}
+
+/**
+ * 图片压缩
+ * @param {*} file 上传file对象或base64url
+ * @param {*} quality 压缩质量
+ * @param {*} callback 解压后的回调
+ */
+export const imageCompress = (file, quality, callback) => {
+    try {
+        lrz(file, {quality}).then((rst) => {
+            let currfile = dataURLtoFile(rst.base64, file.name);
+            callback(currfile);
+        })  
+    } catch (error) {
+        callback(null);
+    }
+}
+
+/**
+ * 将base64转换为文件
+ * @param {*} dataurl base64图片
+ * @param {*} filename 文件名称
+ */
+export const base64ToFile = (dataurl, filename) => {
+    return dataURLtoFile(dataurl, filename);
+}
+

@@ -149,8 +149,8 @@ class CouponPackage extends Component {
     }
 
     // 跳转卡券详情页面
-    goDetail = (id) => {
-        this.props.history.push(`/app/coupon/detail/${id}?flag=package`)
+    goDetail = (id, status) => {
+        this.props.history.push(`/app/coupon/detail/${id}?flag=package&status=${status}`)
     };
 
     /**
@@ -161,7 +161,7 @@ class CouponPackage extends Component {
             return (
                 <CouponComponent couponItem={couponItem}
                     key={index}
-                    handleClick={(e)=>{this.goDetail(couponItem.couponNumber)}}>
+                    handleClick={(e)=>{this.goDetail(couponItem.couponNumber, status)}}>
                     <MobileButton text="去使用" buttonClass="shortButton" handleClick={(e)=>{this.goToUse(couponItem.couponNumber)}} />
                 </CouponComponent>
             )
@@ -171,7 +171,7 @@ class CouponPackage extends Component {
                 <CouponComponent couponItem={couponItem}
                     key={index}
                     customClass="coupon-icon"
-                    handleClick={(e)=>{this.goDetail(couponItem.couponNumber)}}>
+                    handleClick={(e)=>{this.goDetail(couponItem.couponNumber, status)}}>
                     <img src={has_used_icon_sm} alt="" />
                 </CouponComponent>
             );
@@ -182,7 +182,7 @@ class CouponPackage extends Component {
                     useScene="invalid-coupon"
                     key={index}
                     customClass="coupon-icon"
-                    handleClick={(e)=>{this.goDetail(couponItem.couponNumber)}}>
+                    handleClick={(e)=>{this.goDetail(couponItem.couponNumber, status)}}>
                     <img src={invalid_icon_sm} alt="" />
                 </CouponComponent>
             );

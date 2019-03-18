@@ -1,5 +1,5 @@
-import React, { Component } from 'react';
-import { WingBlank, Toast, WhiteSpace } from 'antd-mobile';
+import React, {Component} from 'react';
+import {WingBlank, Toast, WhiteSpace} from 'antd-mobile';
 import moment from 'moment';
 import QueueAnim from 'rc-queue-anim';
 import Tloader from 'react-touch-loader';
@@ -28,7 +28,7 @@ class CouponList extends Component {
     componentWillMount() {
         this.GetCouponSquareList();
     }
-    
+
     /**
      * 获取卡券广场列表
      */
@@ -156,13 +156,18 @@ class CouponList extends Component {
                 return (
                     <div className="rob">
                         {
-                            parseInt(item.availInventory) > 50 ? null : <div className="text">剩余<span>{item.availInventory}</span>张</div>
+                            parseInt(item.availInventory) > 50 ? null :
+                                <div className="text">剩余<span>{item.availInventory}</span>张</div>
                         }
                         {
                             item.isuse != undefined && item.isuse == true ? (
-                                <MobileButton text="去使用" buttonClass="shortButton" handleClick={(e) => {this.goToUse(e, item.couponNumber)}} />
+                                <MobileButton text="去使用" buttonClass="shortButton" handleClick={(e) => {
+                                    this.goToUse(e, item.couponNumber)
+                                }}/>
                             ) : (
-                                <MobileButton text="立即抢" buttonClass="shortButton" handleClick={(e) => {this.goRob(e, item.id)}} />
+                                <MobileButton text="立即抢" buttonClass="shortButton" handleClick={(e) => {
+                                    this.goRob(e, item.id)
+                                }}/>
                             )
                         }
                     </div>
@@ -171,33 +176,37 @@ class CouponList extends Component {
                 // 未开始
                 let _diff = moment.duration(startTime - nowTime, 'seconds');
                 let days = Math.floor(_diff.asDays());
-                if(days >= 1) {
+                if (days >= 1) {
                     // 剩余x天开抢
                     // 如果倒计时天数大于99天，则显示99天
-                    if(days > 99) {
+                    if (days > 99) {
                         days = 99;
                     }
                     return (
                         <div className="day">
-                            <MobileButton text="未开始" disabled buttonClass="shortButton" customClass="not-start" handleClick={() => {}} />
+                            <MobileButton text="未开始" disabled buttonClass="shortButton" customClass="not-start"
+                                          handleClick={() => {
+                                          }}/>
                             <div className="text">剩余<span>{days}</span>天开抢</div>
                         </div>
                     )
-                } else if (days < 1 ) {
+                } else if (days < 1) {
                     // 剩余x时x分x秒开抢
                     return (
                         <div className="hour">
-                            <MobileButton text="未开始" disabled buttonClass="shortButton" customClass="not-start" handleClick={() => {}} />
-                            <CountDown startTime={startTime} handleChange={this.handleChange} />
+                            <MobileButton text="未开始" disabled buttonClass="shortButton" customClass="not-start"
+                                          handleClick={() => {
+                                          }}/>
+                            <CountDown startTime={startTime} handleChange={this.handleChange}/>
                         </div>
                     )
                 }
             }
-        } else if(item.availInventory <= 0) {
+        } else if (item.availInventory <= 0) {
             // 库存为0时显示已被抢完
             return (
                 <div className="coupon-out">
-                    <img src={coupon_out_icon} alt="" />
+                    <img src={coupon_out_icon} alt=""/>
                     <div className="text">已被抢完</div>
                 </div>
             )
@@ -216,13 +225,10 @@ class CouponList extends Component {
     };
 
     render() {
-        const { couponItems, hasMore, initializing, autoLoadMore } = this.state;
-        const { rootinfo } = this.props;
+        const {couponItems, hasMore, initializing, autoLoadMore} = this.state;
+        const {rootinfo} = this.props;
         return (
             <div className="grey-back coupon-list-container">
-                <div className="title">
-                    <img src={coupon_list_title} alt="" />
-                </div>
                 <Tloader
                     // onRefresh={this.refresh}
                     onLoadMore={this.loadMore}
@@ -231,27 +237,40 @@ class CouponList extends Component {
                     initializing={initializing}>
                     {
                         couponItems == '' ? (
-                            <div className="no-data">
-                                <img src={no_coupon} alt="" />
-                                <div>暂无卡券</div>
+                            <div style={{height:'100%'}}>
+                                <div className="title">
+                                    <img src={coupon_list_title} alt=""/>
+                                </div>
+                                <div className="no-data">
+                                    <img src={no_coupon} alt=""/>
+                                    <div>暂无卡券</div>
+                                </div>
                             </div>
                         ) : (
-                            <div className="content">
-                                <WingBlank size="sm">
-                                    <QueueAnim type={['right', 'left']}>
-                                        {
-                                            couponItems.map((couponItem, index) => {
-                                                return (
-                                                    <CouponComponent couponItem={couponItem} key={index} handleClick={(e)=>{this.goDetail(couponItem.couponNumber)}}>
-                                                        {this.judge(couponItem)}
-                                                    </CouponComponent>
-                                                )
-                                            })
-                                        }
-                                    </QueueAnim>
-                                    <WhiteSpace size="xs" />
-                                    {rootinfo.isIOS?(<WhiteSpace size="xl" />):('')}
-                                </WingBlank>
+                            <div style={{height:'100%'}}>
+                                <div className="title">
+                                    <img src={coupon_list_title} alt=""/>
+                                </div>
+                                <div className="content">
+                                    <WingBlank size="sm">
+                                        <QueueAnim type={['right', 'left']}>
+                                            {
+                                                couponItems.map((couponItem, index) => {
+                                                    return (
+                                                        <CouponComponent couponItem={couponItem} key={index}
+                                                                         handleClick={(e) => {
+                                                                             this.goDetail(couponItem.couponNumber)
+                                                                         }}>
+                                                            {this.judge(couponItem)}
+                                                        </CouponComponent>
+                                                    )
+                                                })
+                                            }
+                                        </QueueAnim>
+                                        <WhiteSpace size="xs"/>
+                                        {rootinfo.isIOS ? (<WhiteSpace size="xl"/>) : ('')}
+                                    </WingBlank>
+                                </div>
                             </div>
                         )
                     }

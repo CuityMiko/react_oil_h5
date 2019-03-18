@@ -74,7 +74,8 @@ class CToB extends Component {
         userId: null, // 员工对应的用户ID
         joinMemberUrl: '', // 加入会员跳转的URL
         couponPayLimit: [], // 优惠券支付选项
-        noSelCoupon: false // 不选择券
+        noSelCoupon: false, // 不选择券
+        isPay: false // 是否发起支付
     };
 
     componentWillMount() {
@@ -309,7 +310,7 @@ class CToB extends Component {
             _self.setState({couponcode: val, currentCouponAmount: parseFloat(amount).toFixed(2), couponPayLimit: payLimit, noSelCoupon: true}, () => {
                 _self.onClose('selectCouponModal');
                 // 重新计算金额
-                _self.computeAmount();
+                _self.reComputeAmount();
             });
         } else {
             _self.setState({couponcode: '', currentCouponAmount: 0, couponPayLimit: payLimit, noSelCoupon: true}, () => {
@@ -396,6 +397,9 @@ class CToB extends Component {
                 this.setState({
                     couponcode: _maxcoupon.code,
                     currentCouponAmount: parseFloat(_maxcoupon.amount).toFixed(2)
+                }, () => {
+                    // 重新计算金额
+                    this.reComputeAmount();
                 })
             } else {
                 this.setState({
@@ -624,6 +628,30 @@ class CToB extends Component {
     }
 
     /**
+     * 重新计算优惠价格
+     */
+    reComputeAmount = () => {
+        const {amount, price, isMember, mbrPrice, nonMbrPrice, currentCouponAmount} = this.state;
+        let shengCount = parseFloat(amount) / price;
+        let youhuiAmount = 0;
+        let payAmount = amount;
+        let actAmount = 0;
+        if (isMember) {
+            if (mbrPrice != null) {
+                youhuiAmount = shengCount * (price - mbrPrice);
+            }
+        } else {
+            if (nonMbrPrice != null) {
+                youhuiAmount = shengCount * (price - nonMbrPrice);
+            }
+        }
+        actAmount = parseFloat(youhuiAmount).toFixed(2)
+        payAmount = parseFloat(amount - actAmount - currentCouponAmount).toFixed(2);
+        payAmount = payAmount > 0 ? payAmount : 0;
+        this.setState({actAmount, payAmount});
+    }
+
+    /**
      * 加入会员
      */
     toMember = () => {
@@ -681,6 +709,7 @@ class CToB extends Component {
             Toast.fail('请选择支付方式', 1);
             return;
         }
+        this.setState({isPay: true});
         // 获取会员ID
         let mbrId = null;
         const {MemberInfo} = this.props;
@@ -704,14 +733,18 @@ class CToB extends Component {
         }
         PaymentService.ToPay(condition).then(res => {
             if (res != null) {
+                // this.setState({isPay: false});
                 if (res.needRedirect && res.needRedirect == true) {
                     window.location.href = res.redirectUrl;
                 } else {
                     this.props.history.push('/app/payment/pay_success?result=' + encodeURIComponent(JSON.stringify(res)) + '&isMember=' + isMember);
                 }
             } else {
-                Toast.fail('支付失败，请重试！', 2)
+                Toast.fail('支付失败，请重试！', 2);
+                this.setState({isPay: false});
             }
+        }).catch(err => {
+            this.setState({isPay: false});
         })
     }
 
@@ -741,7 +774,8 @@ class CToB extends Component {
             couponReset, // 重置卡券
             cardAvailableAmount, // 当前卡片支付余额
             couponcode,
-            selSkucardSpecId // 选中SKU对应的卡种ID
+            selSkucardSpecId, // 选中SKU对应的卡种ID
+            isPay // 支付状态
         } = this.state;
         return (
             <QueueAnim style={{height:'100%'}} type={['right', 'left']} delay={200} duration={1500} leaveReverse={true} forcedReplay={true}>
@@ -912,7 +946,7 @@ class CToB extends Component {
                     </WingBlank>
                     <WhiteSpace size="lg" />
                     <WingBlank size="sm">
-                        <MobileButton text={`付款（¥${payAmount}）`} customClass="c-to-b-button" buttonClass="longButton" handleClick={this.toPay} />
+                        <MobileButton disabled={isPay} text={`付款（¥${payAmount}）`} customClass="c-to-b-button" buttonClass="longButton" handleClick={this.toPay} />
                         <Modal
                             transparent
                             visible={accountModal}
